@@ -3,6 +3,7 @@
 //
 
 #include <cstdint>
+#include <array>
 
 #ifndef CPU_H
 #define CPU_H
@@ -43,6 +44,8 @@ class CPU {
     std::uint8_t X;   // Index Register X
     std::uint8_t Y;   // Index Register Y
 
+    std::array<std::uint8_t, 0xFFFF> memory;
+
     std::uint8_t P;   // Processor Status
 
     // 7  bit  0
@@ -61,14 +64,14 @@ class CPU {
     /// Constructor
 
     CPU() : PC(PROGRAM_COUNTER), SP(STACK_START), A(0), X(0), Y(0), P(DEFAULT_STATUS) {}
-    ///
+
     /// Instructions
 
     /// Load/Store
     void LDA(std::uint8_t value);    // Load Accumulator
     void LDX(std::uint8_t value);    // Load Index Register X
     void LDY(std::uint8_t value);    // Load Index Register Y
-    void STA(std::uint8_t value);    // Store Accumulator
+    void STA(std::uint16_t address); // Store Accumulator
     void STX(std::uint16_t address); // Store Index Register X
     void STY(std::uint16_t address); // Store Index Register Y
 
@@ -79,7 +82,7 @@ class CPU {
     void TYA(); // Transfer Index Register X to Accumulator
 
     /// Stack Operations
-    void TSX(); // Transfer Stack Pointer to Index Register X
+    void TS`X(); // Transfer Stack Pointer to Index Register X
     void TXS(); // Transfer Index Register X to Stack Pointer
     void PHA(); // Push Accumulator on Stack
     void PHP(); // Push Processor Status on Stack
@@ -140,6 +143,16 @@ class CPU {
     void BRK(); // Force Break
     void NOP(); // No Operation
     void RTI(); // Stop Execution
+
+    /// Utils
+
+    void set_processor_status_flag(uint8_t flag, bool value) {
+        if (value) {
+            P |= flag;
+        } else {
+            P &= ~flag;
+        }
+    }
 };
 
 } // cpu

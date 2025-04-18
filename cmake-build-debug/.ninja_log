@@ -12,3 +12,15 @@
 36	165	7667167262669122	CMakeFiles/NES_Emulator.dir/cpu/instructions/system.cpp.obj	53fca30e6b302a4c
 28	167	7667167262589122	CMakeFiles/NES_Emulator.dir/cpu/instructions/branch.cpp.obj	fab7438276581753
 167	733	7667167263982331	NES_Emulator.exe	35a99ae713baa1bc
+36	507	7667190988958197	CMakeFiles/NES_Emulator.dir/cpu/instructions/transfer.cpp.obj	3d5b0e3ac82c4554
+45	518	7667190989047723	CMakeFiles/NES_Emulator.dir/cpu/instructions/stack.cpp.obj	72be45de924108d6
+56	527	7667190989157602	CMakeFiles/NES_Emulator.dir/cpu/instructions/logical.cpp.obj	2abcf5206aa9230e
+65	535	7667190989247603	CMakeFiles/NES_Emulator.dir/cpu/instructions/arithmetic.cpp.obj	1fb5460ac24c2490
+74	583	7667190989343225	CMakeFiles/NES_Emulator.dir/cpu/instructions/increment.cpp.obj	3aa9a0f9d82a936
+26	591	7667190988868198	CMakeFiles/NES_Emulator.dir/cpu/instructions/load.cpp.obj	351b24ec751efb5b
+518	991	7667190993776870	CMakeFiles/NES_Emulator.dir/cpu/instructions/jump.cpp.obj	b1d3b5938732cb12
+508	998	7667190993676860	CMakeFiles/NES_Emulator.dir/cpu/instructions/shift.cpp.obj	573cef0391e34755
+535	1008	7667190993946872	CMakeFiles/NES_Emulator.dir/cpu/instructions/control.cpp.obj	e878a376e94633f5
+527	1019	7667190993866869	CMakeFiles/NES_Emulator.dir/cpu/instructions/branch.cpp.obj	fab7438276581753
+583	1035	7667190994436907	CMakeFiles/NES_Emulator.dir/cpu/instructions/system.cpp.obj	53fca30e6b302a4c
+1035	1221	7667190998949401	NES_Emulator.exe	35a99ae713baa1bc
