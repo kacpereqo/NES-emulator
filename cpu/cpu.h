@@ -94,13 +94,13 @@ class CPU {
 
     /// Branches
     void BCC(std::int8_t value); // Branch if Equal
-    void BCS(std::int8_t value)); // Branch if Carry Set
-    void BEQ(std::int8_t value)); // Branch if Equal
-    void BMI(std::int8_t value)); // Branch if Minus
-    void BNE(std::int8_t value)); // Branch if Not Equal
-    void BPL(std::int8_t value)); // Branch if Positive
-    void BVC(std::int8_t value)); // Branch if Overflow Clear
-    void BVS(std::int8_t value)); // Branch if Overflow Set
+    void BCS(std::int8_t value); // Branch if Carry Set
+    void BEQ(std::int8_t value); // Branch if Equal
+    void BMI(std::int8_t value); // Branch if Minus
+    void BNE(std::int8_t value); // Branch if Not Equal
+    void BPL(std::int8_t value); // Branch if Positive
+    void BVC(std::int8_t value); // Branch if Overflow Clear
+    void BVS(std::int8_t value); // Branch if Overflow Set
 
     /// Control
     void CLC(); // Clear Carry Flag

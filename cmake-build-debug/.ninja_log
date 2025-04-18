@@ -1,0 +1,14 @@
+# ninja log v6
+25	264	7667167136483981	CMakeFiles/NES_Emulator.dir/cpu/instructions/transfer.cpp.obj	3d5b0e3ac82c4554
+16	275	7667167136396551	CMakeFiles/NES_Emulator.dir/cpu/instructions/load.cpp.obj	351b24ec751efb5b
+57	283	7667167136803798	CMakeFiles/NES_Emulator.dir/cpu/instructions/arithmetic.cpp.obj	1fb5460ac24c2490
+35	292	7667167136594996	CMakeFiles/NES_Emulator.dir/cpu/instructions/stack.cpp.obj	72be45de924108d6
+49	301	7667167136723789	CMakeFiles/NES_Emulator.dir/cpu/instructions/logical.cpp.obj	2abcf5206aa9230e
+275	521	7667167138991502	CMakeFiles/NES_Emulator.dir/cpu/instructions/shift.cpp.obj	573cef0391e34755
+301	545	7667167139249671	CMakeFiles/NES_Emulator.dir/cpu/instructions/control.cpp.obj	e878a376e94633f5
+267	546	7667167138909642	CMakeFiles/NES_Emulator.dir/cpu/instructions/increment.cpp.obj	3aa9a0f9d82a936
+284	555	7667167139079646	CMakeFiles/NES_Emulator.dir/cpu/instructions/jump.cpp.obj	b1d3b5938732cb12
+4	1277	7667167136272459	CMakeFiles/NES_Emulator.dir/main.cpp.obj	2f2d710ce3c8cdb
+36	165	7667167262669122	CMakeFiles/NES_Emulator.dir/cpu/instructions/system.cpp.obj	53fca30e6b302a4c
+28	167	7667167262589122	CMakeFiles/NES_Emulator.dir/cpu/instructions/branch.cpp.obj	fab7438276581753
+167	733	7667167263982331	NES_Emulator.exe	35a99ae713baa1bc
