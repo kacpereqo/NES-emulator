@@ -7,18 +7,31 @@
 #ifndef CPU_H
 #define CPU_H
 
+
+/// Memory secotr
+/// Internal RAM ($0000-$07FF)
+/// cartridge RAM (usually $6000–$7FFF)
+///
+
 namespace CPU {
 
-enum class ProcessorStatus {
-    Carry            = 1 << 0,
-    Zero             = 1 << 1,
-    InterruptDisable = 1 << 2,
-    DecimalMode      = 1 << 3,
-    BreakCommand     = 1 << 4,
-    // Unused        = 1 << 5, 7th bit is unused
-    Overflow         = 1 << 6,
-    Negative         = 1 << 7,
-};
+    namespace ProcessorStatus{
+        enum  ProcessorStatus : std::uint8_t {
+            Carry            = 1 << 0,
+            Zero             = 1 << 1,
+            InterruptDisable = 1 << 2,
+            DecimalMode      = 1 << 3,
+            BreakCommand     = 1 << 4,
+            Unused           = 1 << 5,  // 7th bit is unused
+            Overflow         = 1 << 6,
+            Negative         = 1 << 7,
+        };
+    }
+
+static constexpr std::uint8_t STACK_START = 0xFD; // Stack starts at 0x0100
+static constexpr std::uint16_t PROGRAM_COUNTER = 0xFFFC;
+static constexpr std::uint8_t DEFAULT_STATUS =  ProcessorStatus::Unused | ProcessorStatus::InterruptDisable | ProcessorStatus::DecimalMode;
+
 
 class CPU {
     /// Registers
@@ -32,11 +45,23 @@ class CPU {
 
     std::uint8_t P;   // Processor Status
 
+    // 7  bit  0
+    // ---- ----
+    // NV1B DIZC
+    // |||| ||||
+    // |||| |||+- Carry
+    // |||| ||+-- Zero
+    // |||| |+--- Interrupt Disable
+    // |||| +---- Decimal
+    // |||+------ (No CPU effect; see: the B flag)
+    // ||+------- (No CPU effect; always pushed as 1)
+    // |+-------- Overflow
+    // +--------- Negative
+
     /// Constructor
 
-    CPU() : PC(0), SP(0), A(0), X(0), Y(0), P(0) {}
-
-
+    CPU() : PC(PROGRAM_COUNTER), SP(STACK_START), A(0), X(0), Y(0), P(DEFAULT_STATUS) {}
+    ///
     /// Instructions
 
     /// Load/Store
