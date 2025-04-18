@@ -61,6 +61,12 @@ build CMakeFiles/NES_Emulator.dir/cpu/cpu.cpp.obj: CXX_COMPILER__NES_Emulator_un
   OBJECT_DIR = CMakeFiles\NES_Emulator.dir
   OBJECT_FILE_DIR = CMakeFiles\NES_Emulator.dir\cpu
 
+build CMakeFiles/NES_Emulator.dir/cpu/instructions/load.cpp.obj: CXX_COMPILER__NES_Emulator_unscanned_Debug C$:/Users/thinkPaździerż/CLionProjects/NES-Emulator/cpu/instructions/load.cpp || cmake_object_order_depends_target_NES_Emulator
+  DEP_FILE = CMakeFiles\NES_Emulator.dir\cpu\instructions\load.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\NES_Emulator.dir
+  OBJECT_FILE_DIR = CMakeFiles\NES_Emulator.dir\cpu\instructions
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target NES_Emulator
@@ -69,7 +75,7 @@ build CMakeFiles/NES_Emulator.dir/cpu/cpu.cpp.obj: CXX_COMPILER__NES_Emulator_un
 #############################################
 # Link the executable NES_Emulator.exe
 
-build NES_Emulator.exe: CXX_EXECUTABLE_LINKER__NES_Emulator_Debug CMakeFiles/NES_Emulator.dir/main.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/cpu.cpp.obj
+build NES_Emulator.exe: CXX_EXECUTABLE_LINKER__NES_Emulator_Debug CMakeFiles/NES_Emulator.dir/main.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/cpu.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/load.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\NES_Emulator.dir

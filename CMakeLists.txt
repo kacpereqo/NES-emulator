@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(NES_Emulator main.cpp
         cpu/cpu.cpp
-        cpu/cpu.h)
+        cpu/cpu.h
+        cpu/instructions/load.cpp)
