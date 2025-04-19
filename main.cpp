@@ -1,7 +1,8 @@
 #include <iostream>
-#include "cpu/cpu.h"
+#include "nes/nes.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    NES::NES nes;
+
+    nes.run();
 }

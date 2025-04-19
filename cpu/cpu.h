@@ -68,6 +68,13 @@ static constexpr std::uint8_t DEFAULT_STATUS{ProcessorStatus::Unused | Processor
 static constexpr std::uint16_t MEMORY_SIZE{0xFFFF}; // 8B * 65535 = 64KB
 
 class CPU {
+public:
+    /// Constructor
+
+    explicit CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory}, P{DEFAULT_STATUS} {}
+
+private:
+
     /// Registers
     /// https://www.nesdev.org/obelisk-6502-guide/registers.html
 
@@ -94,9 +101,6 @@ class CPU {
     // |+-------- Overflow
     // +--------- Negative
 
-    /// Constructor
-
-    CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory}, P{DEFAULT_STATUS} {}
 
     /// Instructions
 
