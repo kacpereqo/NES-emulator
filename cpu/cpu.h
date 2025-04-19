@@ -9,10 +9,23 @@
 #define CPU_H
 
 
-/// Memory secotr
-/// Internal RAM ($0000-$07FF)
-/// cartridge RAM (usually $6000–$7FFF)
-///
+/// https://www.nesdev.org/wiki/CPU_memory_map
+// Address range 	Size 	Device
+// $0000–$07FF   	$0800 	2 KB internal RAM
+
+// $0800–$0FFF 	    $0800 	Mirrors of $0000–$07FF
+// $1000–$17FF 	    $0800
+// $1800–$1FFF 	    $0800
+
+// $2000–$2007 	    $0008 	NES PPU registers
+// $2008–$3FFF 	    $1FF8 	Mirrors of $2000–$2007 (repeats every 8 bytes)
+// $4000–$4017 	    $0018 	NES APU and I/O registers
+// $4018–$401F 	    $0008 	APU and I/O functionality that is normally disabled. See CPU Test Mode.
+// $4020–$FFFF      $BFE0   PRG ROM, PRG RAM, or other memory
+// • $6000–$7FFF    $2000   Usually cartridge RAM, when present.
+// • $8000–$FFFF 	$8000   Usually cartridge ROM and mapper registers.
+
+
 
 namespace CPU {
 
@@ -32,7 +45,7 @@ namespace CPU {
 static constexpr std::uint8_t STACK_START = 0xFD; // Stack starts at 0x0100
 static constexpr std::uint16_t PROGRAM_COUNTER = 0xFFFC;
 static constexpr std::uint8_t DEFAULT_STATUS =  ProcessorStatus::Unused | ProcessorStatus::InterruptDisable | ProcessorStatus::DecimalMode;
-
+static constexpr std::uint16_t MEMORY_SIZE = 0xFFFF; // 8B * 65535 = 64KB
 
 class CPU {
     /// Registers
@@ -44,7 +57,7 @@ class CPU {
     std::uint8_t X;   // Index Register X
     std::uint8_t Y;   // Index Register Y
 
-    std::array<std::uint8_t, 0xFFFF> memory;
+    std::array<std::uint8_t, 0xFFFF>& memory;
 
     std::uint8_t P;   // Processor Status
 
@@ -63,7 +76,7 @@ class CPU {
 
     /// Constructor
 
-    CPU() : PC(PROGRAM_COUNTER), SP(STACK_START), A(0), X(0), Y(0), P(DEFAULT_STATUS) {}
+    CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC(PROGRAM_COUNTER), SP(STACK_START), A(0), X(0), Y(0), P(DEFAULT_STATUS), memory(memory) {}
 
     /// Instructions
 
@@ -82,7 +95,7 @@ class CPU {
     void TYA(); // Transfer Index Register X to Accumulator
 
     /// Stack Operations
-    void TS`X(); // Transfer Stack Pointer to Index Register X
+    void TSX(); // Transfer Stack Pointer to Index Register X
     void TXS(); // Transfer Index Register X to Stack Pointer
     void PHA(); // Push Accumulator on Stack
     void PHP(); // Push Processor Status on Stack
@@ -110,10 +123,10 @@ class CPU {
     void DEY();                     // Decrement Index Register Y
 
     /// Shifts
-    void ASL(std::int8_t value); // Arithmetic Shift Left
-    void LSR(std::int8_t value); // Logical Shift Right
-    void ROL(std::int8_t value); // Rotate Left
-    void ROR(std::int8_t value); // Rotate Right
+    void ASL(std::int8_t & value); // Arithmetic Shift Left
+    void LSR(std::int8_t & value); // Logical Shift Right
+    void ROL(std::int8_t & value); // Rotate Left
+    void ROR(std::int8_t & value); // Rotate Right
 
     /// Jumps & Calls
     void JMP(std::uint16_t address); // Jump to Address
@@ -146,12 +159,16 @@ class CPU {
 
     /// Utils
 
-    void set_processor_status_flag(uint8_t flag, bool value) {
+    void set_processor_status_flag(const std::uint8_t flag, const bool value) {
         if (value) {
             P |= flag;
         } else {
             P &= ~flag;
         }
+    }
+
+    bool get_processor_status_flag(const std::uint8_t flag) const {
+        return P & flag;
     }
 };
 
