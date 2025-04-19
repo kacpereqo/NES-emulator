@@ -16,20 +16,17 @@ void CPU::CPU::TXS(){
 
 // Push Accumulator on Stack
 void CPU::CPU::PHA(){
-    this->memory[0X100+this->SP] = this->A;
-    this->SP--;
+    this->push_to_stack(this->A);
 }
 
 // Push Processor Status on Stack
 void CPU::CPU::PHP(){
-    this->memory[0x100+this->SP] = this->P;
-    this->SP--;
+    this->push_to_stack(this->P);
 }
 
 // Pull Accumulator from Stack
 void CPU::CPU::PLA(){
-    this->SP++;
-    this->A = this->memory[0x100 + this->SP];
+    this->A = this->pop_from_stack<std::uint8_t>();
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
     this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);

@@ -33,6 +33,7 @@ template<>
 std::uint16_t CPU::CPU::pop_from_stack<std::uint16_t>() {
     SP++;
     const std::uint8_t low_byte = memory[0x100 + SP];
+
     SP++;
     const std::uint8_t high_byte = memory[0x100 + SP];
     return (high_byte << 8) | low_byte;

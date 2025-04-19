@@ -25,7 +25,7 @@ void CPU::CPU::INY() {
 }
 
  // Decrement Memory
-void CPU::CPU::DEC(std::int16_t address) {
+void CPU::CPU::DEC(const std::int16_t address) {
     this->memory[address]--;
 }
 
