@@ -6,19 +6,25 @@
 
 // Force Break
 void CPU::CPU::BRK() {
-    // TODO: Implement BRK (Force Break) logic
-    // This would trigger a software interrupt by pushing the Program Counter and Status flags to the stack,
-    // then setting the Interrupt flag to disable further interrupts.
+    PC += 2;
+
+    this->push_to_stack(this->PC);
+    this->push_to_stack(this->P);
+
+
+    this->PC = (this->memory[0xFFFF] << 8) | this->memory[0xFFFF - 1];
+
+    this->set_processor_status_flag(ProcessorStatus::InterruptDisable, true);
+
 }
 
 // No Operation
-void CPU::CPU::NOP() {
-    // TODO: Implement NOP (No Operation) logic
-    // This would do nothing, just increment the Program Counter.
+void `CPU::CPU::NOP() {
+    ;
 }
 
 // Stop Execution (Return from Interrupt)
 void CPU::CPU::RTI() {
-    // TODO: Implement RTI (Return from Interrupt) logic
-    // This would pop the Processor Status and Program Counter from the stack to return from an interrupt.
+    this->P = this->pop_from_stack<std::uint8_t>();
+    this->PC = this->pop_from_stack<std::uint16_t>();
 }

@@ -5,19 +5,28 @@
 #include "../cpu.h"
 
 // Jump to Address
-void CPU::CPU::JMP(std::uint16_t address) {
-    // TODO: Implement JMP (Jump) logic
-    // This would update the Program Counter (PC) to the given address.
+void CPU::CPU::JMP(const std::uint16_t address) {
+    this->PC = address;
 }
 
 // Jump to Subroutine
-void CPU::CPU::JSR(std::uint16_t address) {
-    // TODO: Implement JSR (Jump to Subroutine) logic
-    // This would push the return address (PC + 2) onto the stack and jump to the subroutine at the given address.
+void CPU::CPU::JSR(const std::uint16_t address) {
+    this->memory[0x100 + this->SP] = (this->PC >> 8) & 0xFF; // Push high byte
+    this->SP--;
+
+    this->memory[0x100 + this->SP] = this->PC & 0xFF;        // Push low byte
+    this->SP--;
+
+    this->PC = address;
 }
 
 // Return from Subroutine
 void CPU::CPU::RTS() {
-    // TODO: Implement RTS (Return from Subroutine) logic
-    // This would pop the return address from the stack and continue execution from there.
+    this->SP++;
+    const std::uint8_t low_byte = this->memory[0x100 + this->SP];
+    this->SP++;
+    const std::uint8_t high_byte = this->memory[0x100 + this->SP];
+
+    this->PC = (high_byte << 8) | low_byte;
+    this->PC++;
 }

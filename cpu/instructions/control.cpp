@@ -6,42 +6,35 @@
 
 // Clear Carry Flag
 void CPU::CPU::CLC() {
-    // TODO: Implement CLC (Clear Carry Flag) logic
-    // This would clear the Carry flag in the status register.
+    this->set_processor_status_flag(ProcessorStatus::Carry, false);
 }
 
 // Clear Decimal Mode
 void CPU::CPU::CLD() {
-    // TODO: Implement CLD (Clear Decimal Mode) logic
-    // This would clear the Decimal Mode flag in the status register.
+    this->set_processor_status_flag(ProcessorStatus::DecimalMode, false);
 }
 
 // Clear Interrupt Disable
 void CPU::CPU::CLI() {
-    // TODO: Implement CLI (Clear Interrupt Disable) logic
-    // This would clear the Interrupt Disable flag in the status register.
+    this->set_processor_status_flag(ProcessorStatus::InterruptDisable, false);
 }
 
 // Clear Overflow Flag
 void CPU::CPU::CLV() {
-    // TODO: Implement CLV (Clear Overflow Flag) logic
-    // This would clear the Overflow flag in the status register.
+    this->set_processor_status_flag(ProcessorStatus::Overflow, false);
 }
 
 // Set Carry Flag
 void CPU::CPU::SEC() {
-    // TODO: Implement SEC (Set Carry Flag) logic
-    // This would set the Carry flag in the status register.
+    this->set_processor_status_flag(ProcessorStatus::Carry, true);
 }
 
 // Set Decimal Mode
 void CPU::CPU::SED() {
-    // TODO: Implement SED (Set Decimal Mode) logic
-    // This would set the Decimal Mode flag in the status register.
+    this->set_processor_status_flag(ProcessorStatus::DecimalMode, true);
 }
 
 // Set Interrupt Disable
 void CPU::CPU::SEI() {
-    // TODO: Implement SEI (Set Interrupt Disable) logic
-    // This would set the Interrupt Disable flag in the status register.
+    this->set_processor_status_flag(ProcessorStatus::InterruptDisable, true);
 }

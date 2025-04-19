@@ -15,4 +15,5 @@ add_executable(NES_Emulator main.cpp
         cpu/instructions/jump.cpp
         cpu/instructions/branch.cpp
         cpu/instructions/control.cpp
-        cpu/instructions/system.cpp)
+        cpu/instructions/system.cpp
+        cpu/utils.cpp)

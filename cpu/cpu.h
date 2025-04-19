@@ -25,6 +25,26 @@
 // • $6000–$7FFF    $2000   Usually cartridge RAM, when present.
 // • $8000–$FFFF 	$8000   Usually cartridge ROM and mapper registers.
 
+// struct Memory {
+//
+//     std::array<std::uint8_t, 0x8000> internal_ram;
+//     std::array<std::uint8_t, 0x8000> mirror_ram_1;
+//     std::array<std::uint8_t, 0x8000> mirror_ram_2;
+//     std::array<std::uint8_t, 0x8000> mirror_ram_3;
+//     std::array<std::uint8_t, 0x0008> ppu_registers;
+//     std::array<std::uint8_t, 0x1FF8> mirror_ppu_registers;
+//     std::array<std::uint8_t, 0x0018> apu_io_registers;
+//     std::array<std::uint8_t, 0x0008> apu_io_disabled;
+//     std::array<std::uint8_t, 0xBFE0> other_memory;
+//     std::array<std::uint8_t, 0x2000> cartridge_ram;
+//     std::array<std::uint8_t, 0x8000> cartridge_rom;
+//
+//     Memory() : internal_ram{}, mirror_ram_1{}, mirror_ram_2{}, mirror_ram_3{}, ppu_registers{}, mirror_ppu_registers{}, apu_io_registers{}, apu_io_disabled{}, other_memory{}, cartridge_ram{}, cartridge_rom{} {}
+//
+//     std::uint8_t operator[](const uint16_t address) {
+//
+//     }
+// };
 
 
 namespace CPU {
@@ -42,10 +62,10 @@ namespace CPU {
         };
     }
 
-static constexpr std::uint8_t STACK_START = 0xFD; // Stack starts at 0x0100
-static constexpr std::uint16_t PROGRAM_COUNTER = 0xFFFC;
-static constexpr std::uint8_t DEFAULT_STATUS =  ProcessorStatus::Unused | ProcessorStatus::InterruptDisable | ProcessorStatus::DecimalMode;
-static constexpr std::uint16_t MEMORY_SIZE = 0xFFFF; // 8B * 65535 = 64KB
+static constexpr std::uint8_t STACK_START{0xFD}; // Stack starts at 0x0100
+static constexpr std::uint16_t PROGRAM_COUNTER{0xFFFC};
+static constexpr std::uint8_t DEFAULT_STATUS{ProcessorStatus::Unused | ProcessorStatus::InterruptDisable | ProcessorStatus::DecimalMode};
+static constexpr std::uint16_t MEMORY_SIZE{0xFFFF}; // 8B * 65535 = 64KB
 
 class CPU {
     /// Registers
@@ -57,7 +77,7 @@ class CPU {
     std::uint8_t X;   // Index Register X
     std::uint8_t Y;   // Index Register Y
 
-    std::array<std::uint8_t, 0xFFFF>& memory;
+    std::array< std::uint8_t, 0xFFFF>& memory;
 
     std::uint8_t P;   // Processor Status
 
@@ -76,7 +96,7 @@ class CPU {
 
     /// Constructor
 
-    CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC(PROGRAM_COUNTER), SP(STACK_START), A(0), X(0), Y(0), P(DEFAULT_STATUS), memory(memory) {}
+    CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory}, P{DEFAULT_STATUS} {}
 
     /// Instructions
 
@@ -159,17 +179,15 @@ class CPU {
 
     /// Utils
 
-    void set_processor_status_flag(const std::uint8_t flag, const bool value) {
-        if (value) {
-            P |= flag;
-        } else {
-            P &= ~flag;
-        }
-    }
 
-    bool get_processor_status_flag(const std::uint8_t flag) const {
-        return P & flag;
-    }
+    void set_processor_status_flag(std::uint8_t flag, bool value);
+    bool get_processor_status_flag(std::uint8_t flag) const;
+
+    void push_to_stack(std::uint8_t value);
+    void push_to_stack(std::uint16_t value);
+
+    template<typename T>
+    T pop_from_stack();
 };
 
 } // cpu

@@ -22,14 +22,14 @@ void CPU::CPU::PHA(){
 
 // Push Processor Status on Stack
 void CPU::CPU::PHP(){
-    this->memory[0X100+this->SP] = this->P;
+    this->memory[0x100+this->SP] = this->P;
     this->SP--;
 }
 
 // Pull Accumulator from Stack
 void CPU::CPU::PLA(){
     this->SP++;
-    this->A = this->memory[0x1000 + this->SP];
+    this->A = this->memory[0x100 + this->SP];
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
     this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
