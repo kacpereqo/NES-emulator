@@ -19,7 +19,7 @@ void CPU::CPU::BRK() {
 }
 
 // No Operation
-void `CPU::CPU::NOP() {
+void CPU::CPU::NOP() {
     ;
 }
 
