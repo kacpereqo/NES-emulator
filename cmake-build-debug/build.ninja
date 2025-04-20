@@ -127,6 +127,12 @@ build CMakeFiles/NES_Emulator.dir/cpu/utils.cpp.obj: CXX_COMPILER__NES_Emulator_
   OBJECT_DIR = CMakeFiles\NES_Emulator.dir
   OBJECT_FILE_DIR = CMakeFiles\NES_Emulator.dir\cpu
 
+build CMakeFiles/NES_Emulator.dir/cpu/cpu.cpp.obj: CXX_COMPILER__NES_Emulator_unscanned_Debug C$:/Users/thinkPaździerż/CLionProjects/NES-Emulator/cpu/cpu.cpp || cmake_object_order_depends_target_NES_Emulator
+  DEP_FILE = CMakeFiles\NES_Emulator.dir\cpu\cpu.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\NES_Emulator.dir
+  OBJECT_FILE_DIR = CMakeFiles\NES_Emulator.dir\cpu
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target NES_Emulator
@@ -135,7 +141,7 @@ build CMakeFiles/NES_Emulator.dir/cpu/utils.cpp.obj: CXX_COMPILER__NES_Emulator_
 #############################################
 # Link the executable NES_Emulator.exe
 
-build NES_Emulator.exe: CXX_EXECUTABLE_LINKER__NES_Emulator_Debug CMakeFiles/NES_Emulator.dir/main.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/load.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/transfer.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/stack.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/logical.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/arithmetic.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/increment.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/shift.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/jump.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/branch.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/control.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/system.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/utils.cpp.obj
+build NES_Emulator.exe: CXX_EXECUTABLE_LINKER__NES_Emulator_Debug CMakeFiles/NES_Emulator.dir/main.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/load.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/transfer.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/stack.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/logical.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/arithmetic.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/increment.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/shift.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/jump.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/branch.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/control.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/instructions/system.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/utils.cpp.obj CMakeFiles/NES_Emulator.dir/cpu/cpu.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\NES_Emulator.dir

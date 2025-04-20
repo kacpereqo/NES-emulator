@@ -4,8 +4,8 @@
 #include "../cpu.h"
 
  // Increment Memory
-void CPU::CPU::INC(const std::int16_t address) {
-    this->memory[address]++;
+void CPU::CPU::INC() {
+    this->memory[this->temp_address]++;
 }
 
  // Increment Index Register X
@@ -25,8 +25,8 @@ void CPU::CPU::INY() {
 }
 
  // Decrement Memory
-void CPU::CPU::DEC(const std::int16_t address) {
-    this->memory[address]--;
+void CPU::CPU::DEC() {
+    this->memory[this->temp_address]--;
 }
 
  // Decrement Index Register X

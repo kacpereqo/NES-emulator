@@ -4,16 +4,16 @@
 
 #include "../cpu.h"
 
-// Jump to Address
-void CPU::CPU::JMP(const std::uint16_t address) {
-    this->PC = address;
+// Jump to this->temp_address
+void CPU::CPU::JMP() {
+    this->PC = this->temp_address;
 }
 
 // Jump to Subroutine
-void CPU::CPU::JSR(const std::uint16_t address) {
+void CPU::CPU::JSR() {
     this->push_to_stack(this->PC);
 
-    this->PC = address;
+    this->PC = this->temp_address;
 }
 
 // Return from Subroutine

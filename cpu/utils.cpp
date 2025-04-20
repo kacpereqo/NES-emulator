@@ -4,6 +4,10 @@
 
 #include "cpu.h"
 
+void CPU::CPU::XXX() {
+    ;
+}
+
 void CPU::CPU::set_processor_status_flag(const std::uint8_t flag, const bool value) {
     if (value) {
         P |= flag;

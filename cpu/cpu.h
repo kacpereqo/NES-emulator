@@ -2,50 +2,11 @@
 // Created by thinkPaździerż on 18.04.2025.
 //
 
-#include <cstdint>
-#include <array>
-
 #ifndef CPU_H
 #define CPU_H
 
-
-/// https://www.nesdev.org/wiki/CPU_memory_map
-// Address range 	Size 	Device
-// $0000–$07FF   	$0800 	2 KB internal RAM
-
-// $0800–$0FFF 	    $0800 	Mirrors of $0000–$07FF
-// $1000–$17FF 	    $0800
-// $1800–$1FFF 	    $0800
-
-// $2000–$2007 	    $0008 	NES PPU registers
-// $2008–$3FFF 	    $1FF8 	Mirrors of $2000–$2007 (repeats every 8 bytes)
-// $4000–$4017 	    $0018 	NES APU and I/O registers
-// $4018–$401F 	    $0008 	APU and I/O functionality that is normally disabled. See CPU Test Mode.
-// $4020–$FFFF      $BFE0   PRG ROM, PRG RAM, or other memory
-// • $6000–$7FFF    $2000   Usually cartridge RAM, when present.
-// • $8000–$FFFF 	$8000   Usually cartridge ROM and mapper registers.
-
-// struct Memory {
-//
-//     std::array<std::uint8_t, 0x8000> internal_ram;
-//     std::array<std::uint8_t, 0x8000> mirror_ram_1;
-//     std::array<std::uint8_t, 0x8000> mirror_ram_2;
-//     std::array<std::uint8_t, 0x8000> mirror_ram_3;
-//     std::array<std::uint8_t, 0x0008> ppu_registers;
-//     std::array<std::uint8_t, 0x1FF8> mirror_ppu_registers;
-//     std::array<std::uint8_t, 0x0018> apu_io_registers;
-//     std::array<std::uint8_t, 0x0008> apu_io_disabled;
-//     std::array<std::uint8_t, 0xBFE0> other_memory;
-//     std::array<std::uint8_t, 0x2000> cartridge_ram;
-//     std::array<std::uint8_t, 0x8000> cartridge_rom;
-//
-//     Memory() : internal_ram{}, mirror_ram_1{}, mirror_ram_2{}, mirror_ram_3{}, ppu_registers{}, mirror_ppu_registers{}, apu_io_registers{}, apu_io_disabled{}, other_memory{}, cartridge_ram{}, cartridge_rom{} {}
-//
-//     std::uint8_t operator[](const uint16_t address) {
-//
-//     }
-// };
-
+#include <cstdint>
+#include <array>
 
 namespace CPU {
 
@@ -63,17 +24,33 @@ namespace CPU {
     }
 
 static constexpr std::uint8_t STACK_START{0xFD}; // Stack starts at 0x0100
-static constexpr std::uint16_t PROGRAM_COUNTER{0xFFFC};
+static constexpr std::uint16_t PROGRAM_COUNTER{0xFFFC}; // Program Counter starts at 0x8000
 static constexpr std::uint8_t DEFAULT_STATUS{ProcessorStatus::Unused | ProcessorStatus::InterruptDisable | ProcessorStatus::DecimalMode};
 static constexpr std::uint16_t MEMORY_SIZE{0xFFFF}; // 8B * 65535 = 64KB
 
 class CPU {
 public:
+
+    struct Instruction  {
+        using InstructionHandler = void (CPU::CPU::*)();
+        using AddressingModeHandler = void (CPU::CPU::*)();
+
+        InstructionHandler instruction_handler;
+        AddressingModeHandler addressing_mode_handler;
+        std::uint8_t cycles;
+    };
     /// Constructor
 
-    explicit CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory}, P{DEFAULT_STATUS} {}
+    explicit CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory}, P{DEFAULT_STATUS} {
+        this->PC = (memory[PROGRAM_COUNTER + 1] << 8) | memory[PROGRAM_COUNTER];
+    }
+
+    void run();
 
 private:
+    std::uint8_t cpu_cycle_delay{0};
+    std::uint8_t temp_value{0};
+    std::uint16_t temp_address{0};
 
     /// Registers
     /// https://www.nesdev.org/obelisk-6502-guide/registers.html
@@ -88,6 +65,7 @@ private:
 
     std::uint8_t P;   // Processor Status
 
+
     // 7  bit  0
     // ---- ----
     // NV1B DIZC
@@ -101,16 +79,33 @@ private:
     // |+-------- Overflow
     // +--------- Negative
 
+    /// Running the CPU
+
+    /// addressing
+    void addressing_accumulator();
+    void addressing_absolute();
+    void addressing_absolute_x();
+    void addressing_absolute_y();
+    void addressing_immediate();
+    void addressing_implied();
+    void addressing_indirect();
+    void addressing_indirect_x();
+    void addressing_indirect_y();
+    void addressing_relative();
+    void addressing_zero_page();
+    void addressing_zero_page_x();
+    void addressing_zero_page_y();
+
 
     /// Instructions
 
     /// Load/Store
-    void LDA(std::uint8_t value);    // Load Accumulator
-    void LDX(std::uint8_t value);    // Load Index Register X
-    void LDY(std::uint8_t value);    // Load Index Register Y
-    void STA(std::uint16_t address); // Store Accumulator
-    void STX(std::uint16_t address); // Store Index Register X
-    void STY(std::uint16_t address); // Store Index Register Y
+    void LDA(); // Load Accumulator
+    void LDX(); // Load Index Register X
+    void LDY(); // Load Index Register Y
+    void STA(); // Store Accumulator
+    void STX(); // Store Index Register X
+    void STY(); // Store Index Register Y
 
     ///Register Transfer
     void TAX(); // Transfer Accumulator to Index Register X
@@ -124,48 +119,49 @@ private:
     void PHA(); // Push Accumulator on Stack
     void PHP(); // Push Processor Status on Stack
     void PLA(); // Pull Accumulator from Stack
+    void PLP(); // Pull Processor Status from Stack
 
     /// Logical
-    void AND(std::int8_t value); // Logical AND
-    void ORA(std::int8_t value); // Logical OR
-    void EOR(std::int8_t value); // Logical XOR
-    void BIT(std::int8_t value); // Bit Test
+    void AND(); // Logical AND
+    void ORA(); // Logical OR
+    void EOR(); // Logical XOR
+    void BIT(); // Bit Test
 
     /// Arithmetic
-    void ADC(std::int8_t value); // Add with Carry
-    void SBC(std::int8_t value); // Subtract with Carry
-    void CMP(std::int8_t value); // Compare Accumulator
-    void CPX(std::int8_t value); // Compare Index Register X
-    void CPY(std::int8_t value); // Compare Index Register Y
+    void ADC(); // Add with Carry
+    void SBC(); // Subtract with Carry
+    void CMP(); // Compare Accumulator
+    void CPX(); // Compare Index Register X
+    void CPY(); // Compare Index Register Y
 
     /// Increments & Decrements
-    void INC(std::int16_t address); // Increment Memory
-    void INX();                     // Increment Index Register X
-    void INY();                     // Increment Index Register Y
-    void DEC(std::int16_t address); // Decrement Memory
-    void DEX();                     // Decrement Index Register X
-    void DEY();                     // Decrement Index Register Y
+    void INC(); // Increment Memory
+    void INX(); // Increment Index Register X
+    void INY(); // Increment Index Register Y
+    void DEC(); // Decrement Memory
+    void DEX(); // Decrement Index Register X
+    void DEY(); // Decrement Index Register Y
 
     /// Shifts
-    void ASL(std::int8_t & value); // Arithmetic Shift Left
-    void LSR(std::int8_t & value); // Logical Shift Right
-    void ROL(std::int8_t & value); // Rotate Left
-    void ROR(std::int8_t & value); // Rotate Right
+    void ASL(); // Arithmetic Shift Left
+    void LSR(); // Logical Shift Right
+    void ROL(); // Rotate Left
+    void ROR(); // Rotate Right
 
     /// Jumps & Calls
-    void JMP(std::uint16_t address); // Jump to Address
-    void JSR(std::uint16_t address); // Jump to Subroutine
+    void JMP(); // Jump to Address
+    void JSR(); // Jump to Subroutine
     void RTS(); // Return from Subroutine
 
     /// Branches
-    void BCC(std::int8_t value); // Branch if Equal
-    void BCS(std::int8_t value); // Branch if Carry Set
-    void BEQ(std::int8_t value); // Branch if Equal
-    void BMI(std::int8_t value); // Branch if Minus
-    void BNE(std::int8_t value); // Branch if Not Equal
-    void BPL(std::int8_t value); // Branch if Positive
-    void BVC(std::int8_t value); // Branch if Overflow Clear
-    void BVS(std::int8_t value); // Branch if Overflow Set
+    void BCC(); // Branch if Equal
+    void BCS(); // Branch if Carry Set
+    void BEQ(); // Branch if Equal
+    void BMI(); // Branch if Minus
+    void BNE(); // Branch if Not Equal
+    void BPL(); // Branch if Positive
+    void BVC(); // Branch if Overflow Clear
+    void BVS(); // Branch if Overflow Set
 
     /// Control
     void CLC(); // Clear Carry Flag
@@ -183,6 +179,7 @@ private:
 
     /// Utils
 
+    void XXX(); // Illegal Instruction
 
     void set_processor_status_flag(std::uint8_t flag, bool value);
     bool get_processor_status_flag(std::uint8_t flag) const;

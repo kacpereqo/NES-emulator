@@ -19,4 +19,5 @@ add_executable(NES_Emulator main.cpp
         cpu/utils.cpp
         nes/nes.h
         ppu/ppu.h
-        apu/apu.h)
+        apu/apu.h
+        cpu/cpu.cpp)
