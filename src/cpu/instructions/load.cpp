@@ -30,15 +30,15 @@ void CPU::CPU::LDY() {
 
 // Store Accumulator
 void CPU::CPU::STA() {
-    this->memory[this->temp_address] = this->A;
+    this->memory[this->temp_value] = this->A;
 }
 
 // Store Index Register X
 void CPU::CPU::STX() {
-    this->memory[this->temp_address] = this->X;
+    this->memory[this->temp_value] = this->X;
 }
 
 // Store Index Register Y
 void CPU::CPU::STY() {
-    this->memory[this->temp_address] = this->Y;
+    this->memory[this->temp_value] = this->Y;
 }

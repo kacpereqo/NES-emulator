@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <array>
+#include <iostream>
 
 namespace CPU {
 
@@ -41,16 +42,25 @@ public:
     };
     /// Constructor
 
-    explicit CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory}, P{DEFAULT_STATUS} {
-        this->PC = (memory[PROGRAM_COUNTER + 1] << 8) | memory[PROGRAM_COUNTER];
-    }
+    explicit CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory) : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory}, P{DEFAULT_STATUS} {}
+    CPU(std::array<std::uint8_t, MEMORY_SIZE> & memory, const std::uint16_t PC,const std::uint8_t SP,const std::uint8_t A,const std::uint8_t X, const std::uint8_t Y,const std::uint8_t P) :
+            PC{PC}, SP{SP}, A{A}, X{X}, Y{Y}, memory{memory}, P{P} {}
+
+    [[nodiscard]] std::uint16_t get_PC()     const { return PC; }
+    [[nodiscard]] std::uint8_t  get_SP()     const { return SP; }
+    [[nodiscard]] std::uint8_t  get_A()      const { return A; }
+    [[nodiscard]] std::uint8_t  get_X()      const { return X; }
+    [[nodiscard]] std::uint8_t  get_Y()      const { return Y; }
+    [[nodiscard]] std::uint8_t  get_P()      const { return P; }
 
     void run();
+    void init();
 
 private:
+    bool after_reset{true};
+
     std::uint8_t cpu_cycle_delay{0};
-    std::uint8_t temp_value{0};
-    std::uint16_t temp_address{0};
+    std::uint16_t temp_value{0};
 
     /// Registers
     /// https://www.nesdev.org/obelisk-6502-guide/registers.html

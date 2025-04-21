@@ -59,7 +59,8 @@ namespace NES {
 
     public:
         [[noreturn]] void run() {
-            for(;;)
+            // for(;;)
+            for(int i = 0; i < 2;i++)
                 cpu.run();
         }
         NES() : cpu{memory} {}
@@ -72,6 +73,7 @@ namespace NES {
             }
             rom_file.read(reinterpret_cast<char *>(memory.data()), memory.size());
             std::cout << "Loaded ROM: " << rom_path << std::endl;
+            std::cout << "Memory size: " << memory.size() << std::endl;
         }
 
     private:

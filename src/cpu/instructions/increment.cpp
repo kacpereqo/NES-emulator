@@ -5,7 +5,11 @@
 
  // Increment Memory
 void CPU::CPU::INC() {
-    this->memory[this->temp_address]++;
+    std::cout << "INC" << " " << std::hex << static_cast<int>(this->temp_value) << std::endl;
+    this->memory[this->temp_value]++;
+
+    this->set_processor_status_flag(ProcessorStatus::Zero, this->memory[this->temp_value] == 0);
+    this->set_processor_status_flag(ProcessorStatus::Negative, this->memory[this->temp_value] & 0x80);
 }
 
  // Increment Index Register X
@@ -26,7 +30,7 @@ void CPU::CPU::INY() {
 
  // Decrement Memory
 void CPU::CPU::DEC() {
-    this->memory[this->temp_address]--;
+    this->memory[this->temp_value]--;
 }
 
  // Decrement Index Register X

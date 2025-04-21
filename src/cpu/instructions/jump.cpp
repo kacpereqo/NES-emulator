@@ -6,14 +6,14 @@
 
 // Jump to this->temp_address
 void CPU::CPU::JMP() {
-    this->PC = this->temp_address;
+    this->PC = this->temp_value;
 }
 
 // Jump to Subroutine
 void CPU::CPU::JSR() {
     this->push_to_stack(this->PC);
 
-    this->PC = this->temp_address;
+    this->PC = this->temp_value;
 }
 
 // Return from Subroutine

@@ -1,9 +1,9 @@
 #include <iostream>
-#include "nes/nes.h"
+#include "src/nes/nes.h"
 
 int main() {
-    NES::NES nes;
+    // NES::NES nes;
 
-    nes.load_rom("6502_functional_test.bin");
-    nes.run();
+    // nes.load_rom("6502_functional_test.bin");
+    // nes.run();
 }
