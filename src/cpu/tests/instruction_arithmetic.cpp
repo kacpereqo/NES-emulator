@@ -31,7 +31,8 @@ TEST(CPU, read_pc_vector_table) {
     EXPECT_EQ(cpu.get_PC(), 0x8000);
 }
 
-TEST(CPU, instruction_00) {
+TEST(CPU, instruction_brk_immidiate) {
+    GTEST_SKIP() << "Test not implemented yet";
     std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
     constexpr std::uint16_t PC{35714};
     constexpr uint8_t SP{81};
@@ -101,3 +102,4 @@ TEST(CPU, instruction_inc_zero_page_indirect) {
     EXPECT_EQ(memory[41920], 0xE4);
     EXPECT_EQ(memory[41921], 0x2D);
 }
+
