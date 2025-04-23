@@ -2534,7 +2534,6 @@ TEST(CPU, instruction_STA_zero_page) {
 }
 TEST(CPU, instruction_STX_zero_page) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x86";
 
   constexpr std::uint16_t PC = 0x4879;
   constexpr uint8_t SP = 0x68;
@@ -2691,7 +2690,6 @@ TEST(CPU, instruction_STA_absolute) {
 }
 TEST(CPU, instruction_STX_absolute) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x8e";
 
   constexpr std::uint16_t PC = 0x1009;
   constexpr uint8_t SP = 0x8b;
@@ -2858,7 +2856,6 @@ TEST(CPU, instruction_STA_zero_page_x) {
 }
 TEST(CPU, instruction_STX_zero_page_y) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x96";
 
   constexpr std::uint16_t PC = 0xfb9c;
   constexpr uint8_t SP = 0xf7;

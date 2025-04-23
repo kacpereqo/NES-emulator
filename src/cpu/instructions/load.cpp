@@ -35,7 +35,7 @@ void CPU::CPU::STA() {
 
 // Store Index Register X
 void CPU::CPU::STX() {
-    this->memory[this->temp_value] = this->X;
+    this->memory[this->temp_address] = this->X;
 }
 
 // Store Index Register Y
