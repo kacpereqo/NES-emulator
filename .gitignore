@@ -75,3 +75,8 @@ fabric.properties
 .idea/
 /venv/
 /scripts/data/
+
+.idea/*
+
+/.idea/
+/scripts/test.txt

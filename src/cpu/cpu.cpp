@@ -325,7 +325,7 @@ void CPU::CPU::addressing_indirect_x() {
     this->temp_address = (this->memory[this->PC++] + this->X) & 0xFF;
     this->temp_address = (this->memory[this->temp_address] | (this->memory[(this->temp_address + 1) & 0xFF] << 8));
 
-    this->temp_value = this->memory[this->temp_address];`
+    this->temp_value = this->memory[this->temp_address];
 }
 
 void CPU::CPU::addressing_indirect_y() {
@@ -355,5 +355,6 @@ void CPU::CPU::addressing_zero_page_y() {
 }
 
 void CPU::CPU::addressing_relative() {
-    this->temp_value = this->PC + static_cast<std::int8_t>(this->memory[PC++]);
+    this->temp_value = this->PC + static_cast<std::int8_t>(this->memory[PC]);
+    this->PC++;
 }

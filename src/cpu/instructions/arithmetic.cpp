@@ -8,7 +8,7 @@
 void CPU::CPU::ADC(){
     this->A += this->temp_value + this->get_processor_status_flag(ProcessorStatus::Carry);
 
-    this->set_processor_status_flag(ProcessorStatus::Carry, this->A > 0xFF);
+    // this->set_processor_status_flag(ProcessorStatus::Carry, this->A == 0xFF);
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
     this->set_processor_status_flag(ProcessorStatus::Overflow, ((this->A ^ this->temp_value) & (this->A ^ this->A)) & 0x80);
     this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
@@ -18,7 +18,7 @@ void CPU::CPU::ADC(){
 void CPU::CPU::SBC(){
     this->A += ~this->temp_value + this->get_processor_status_flag(ProcessorStatus::Carry);
 
-    this->set_processor_status_flag(ProcessorStatus::Carry, this->A > 0xFF);
+    // this->set_processor_status_flag(ProcessorStatus::Carry, this->A  0xFF);
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
     this->set_processor_status_flag(ProcessorStatus::Overflow, ((this->A ^ this->temp_value) & (this->A ^ this->A)) & 0x80);
     this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);

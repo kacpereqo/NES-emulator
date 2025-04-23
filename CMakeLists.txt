@@ -8,8 +8,9 @@ FetchContent_Declare(
         googletest
         URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
 )
-# Optional: uncomment this if on Windows
-#set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror -Wnull-dereference -Wdouble-promotion -Wformat=2")
+
 FetchContent_MakeAvailable(googletest)
 
 # Main executable
