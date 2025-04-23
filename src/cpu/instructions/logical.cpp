@@ -6,6 +6,7 @@
 
 // Logical AND
 void CPU::CPU::AND(){
+    std::cout << "AND" << " " << std::hex << static_cast<int>(this->temp_value) << std::endl;
     this->A &= this->temp_value;
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
