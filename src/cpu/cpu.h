@@ -60,7 +60,9 @@ private:
     bool after_reset{true};
 
     std::uint8_t cpu_cycle_delay{0};
-    std::uint16_t temp_value{0};
+
+    std::uint16_t temp_address{0};
+    std::uint8_t temp_value{0};
 
     /// Registers
     /// https://www.nesdev.org/obelisk-6502-guide/registers.html

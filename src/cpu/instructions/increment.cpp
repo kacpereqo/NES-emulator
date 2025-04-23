@@ -6,10 +6,11 @@
  // Increment Memory
 void CPU::CPU::INC() {
     std::cout << "INC" << " " << std::hex << static_cast<int>(this->temp_value) << std::endl;
-    this->memory[this->temp_value]++;
+    const std::uint8_t value = this->memory[this->temp_address] + 1;
+    this->memory[this->temp_address] = value;
 
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->memory[this->temp_value] == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->memory[this->temp_value] & 0x80);
+    this->set_processor_status_flag(ProcessorStatus::Zero, value == 0);
+    this->set_processor_status_flag(ProcessorStatus::Negative, value & 0x80);
 }
 
  // Increment Index Register X

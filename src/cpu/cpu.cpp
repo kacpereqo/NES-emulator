@@ -296,12 +296,14 @@ void CPU::CPU::addressing_absolute() {
 }
 
 void CPU::CPU::addressing_absolute_x() {
-    this->temp_value = (this->memory[PC] | (this->memory[PC + 1] << 8)) + this->X;
+    this->temp_address = (this->memory[PC] | (this->memory[PC + 1] << 8)) + this->X;
+    this->temp_value = this->memory[this->temp_address];
     this->PC += 2;
 }
 
 void CPU::CPU::addressing_absolute_y() {
-    this->temp_value = (this->memory[PC] | (this->memory[PC + 1] << 8)) + this->Y;
+    this->temp_address = (this->memory[PC] | (this->memory[PC + 1] << 8)) + this->Y;
+    this->temp_value = this->memory[this->temp_address];
     this->PC += 2;
 }
 
@@ -326,20 +328,22 @@ void CPU::CPU::addressing_indirect_x() {
 }
 
 void CPU::CPU::addressing_indirect_y() {
-    this->temp_value = (this->memory[PC] & 0xFF);
+    this->temp_value = (this->memory[PC] + this->Y) & 0xFF;
     this->PC++;
-    this->temp_value = (this->memory[this->temp_value] | (this->memory[this->temp_value + 1] << 8)) + this->Y;
+    this->temp_value = (this->memory[this->temp_value] | (this->memory[this->temp_value + 1] << 8));
 }
 
 void CPU::CPU::addressing_zero_page() {
     std::cout << "addressing_zero_page" << std::endl;
-    const std::uint16_t address = this->memory[PC++];
 
-    this->temp_value = this->memory[address];
+    this->temp_address = this->memory[PC++];
+    this->temp_value = this->memory[this->temp_address];
 }
 
 void CPU::CPU::addressing_zero_page_x() {
-    this->temp_value = (this->memory[PC] + this->X) & 0xFF;
+    this->temp_address = (this->memory[PC] + this->X) & 0xFF;
+    this->temp_value = this->memory[this->temp_address];
+
     this->PC++;
 }
 
