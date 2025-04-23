@@ -74,3 +74,4 @@ fabric.properties
 /cmake-build-debug/
 .idea/
 /venv/
+/scripts/data/

@@ -24,8 +24,8 @@ def generate_test(opcode):
         initial_state = json["initial"]
         final_state = json["final"]
 
-        memory_initial_state =  "\n\t".join(f"memory[0x{(address) :>04x}] = 0x{(value) :>02x};" for address, value in initial_state['ram'])
-        memory_final_state = "\n\t".join([f"EXPECT_EQ(memory[0x{(address) :>04x}], 0x{(value) :>02x});" for address, value in final_state['ram']])
+        memory_initial_state =  "\n\t".join(f"memory[0x{address :>04x}] = 0x{value :>02x};" for address, value in initial_state['ram'])
+        memory_final_state = "\n\t".join([f"EXPECT_EQ(memory[0x{address :>04x}], 0x{value :>02x});" for address, value in final_state['ram']])
 
 
         result = f"""
