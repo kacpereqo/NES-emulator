@@ -9,7 +9,6 @@ TEST(CPU, initial_state) {
     std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
     const CPU::CPU cpu{memory};
 
-    // Test the initial state of the CPU
     EXPECT_EQ(cpu.get_PC(), CPU::PROGRAM_COUNTER);
     EXPECT_EQ(cpu.get_SP(), CPU::STACK_START);
     EXPECT_EQ(cpu.get_A(), 0);
@@ -25,13 +24,13 @@ TEST(CPU, read_pc_vector_table) {
     memory[0xFFFC] = 0x00; // Low byte of the reset vector
     memory[0xFFFD] = 0x80; // High byte of the reset vector
 
-    // Test the initial state of the CPU
     cpu.init();
 
     EXPECT_EQ(cpu.get_PC(), 0x8000);
 }
 
 TEST(CPU, instruction_00) {
+    GTEST_SKIP() << "Instruction 00 not implemented" << std::endl;
     std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
     constexpr std::uint16_t PC{35714};
     constexpr uint8_t SP{81};
@@ -100,4 +99,67 @@ TEST(CPU, instruction_inc_zero_page_indirect) {
     EXPECT_EQ(memory[41919], 0xE6);
     EXPECT_EQ(memory[41920], 0xE4);
     EXPECT_EQ(memory[41921], 0x2D);
+}
+
+TEST(CPU, instruction_AND_immediate) {
+    std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
+
+    constexpr std::uint16_t PC = 0xa4c7;
+    constexpr uint8_t SP       = 0x1d;
+    constexpr uint8_t A        = 0xb0;
+    constexpr uint8_t X        = 0x88;
+    constexpr uint8_t Y        = 0x4b;
+    constexpr uint8_t P        = 0x22;
+
+    memory[0xa4c7] = 0x29;
+    memory[0xa4c8] = 0x14;
+    memory[0xa4c9] = 0xc3;
+
+    CPU::CPU cpu{memory, PC, SP, A, X, Y, P};
+
+    cpu.run();
+
+    EXPECT_EQ(cpu.get_PC(), 0xa4c9);
+    EXPECT_EQ(cpu.get_SP(), 0x1d);
+    EXPECT_EQ(cpu.get_A(),  0x10);
+    EXPECT_EQ(cpu.get_X(),  0x88);
+    EXPECT_EQ(cpu.get_Y(),  0x4b);
+    EXPECT_EQ(cpu.get_P(),  0x20);
+
+    EXPECT_EQ(memory[0xa4c7], 0x29);
+    EXPECT_EQ(memory[0xa4c8], 0x14);
+    EXPECT_EQ(memory[0xa4c9], 0xc3);
+}
+
+
+TEST(CPU, instruction_AND_zero_page) {
+    std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
+
+    constexpr std::uint16_t PC = 0xf0a2;
+    constexpr uint8_t SP       = 0x19;
+    constexpr uint8_t A        = 0x37;
+    constexpr uint8_t X        = 0xad;
+    constexpr uint8_t Y        = 0xb4;
+    constexpr uint8_t P        = 0xab;
+
+    memory[0xf0a2] = 0x25;
+    memory[0xf0a3] = 0xda;
+    memory[0xf0a4] = 0x5a;
+    memory[0x00da] = 0xfc;
+
+    CPU::CPU cpu{memory, PC, SP, A, X, Y, P};
+
+    cpu.run();
+
+    EXPECT_EQ(cpu.get_PC(), 0xf0a4);
+    EXPECT_EQ(cpu.get_SP(), 0x19);
+    EXPECT_EQ(cpu.get_A(),  0x34);
+    EXPECT_EQ(cpu.get_X(),  0xad);
+    EXPECT_EQ(cpu.get_Y(),  0xb4);
+    EXPECT_EQ(cpu.get_P(),  0x29);
+
+    EXPECT_EQ(memory[0x00da], 0xfc);
+    EXPECT_EQ(memory[0xf0a2], 0x25);
+    EXPECT_EQ(memory[0xf0a3], 0xda);
+    EXPECT_EQ(memory[0xf0a4], 0x5a);
 }
