@@ -290,8 +290,8 @@ void CPU::CPU::addressing_accumulator() {
 }
 
 void CPU::CPU::addressing_absolute() {
-    // std::cout << "addressing_absolute" << std::endl;
-    this->temp_value = (this->memory[PC] | (this->memory[PC + 1] << 8));
+    this->temp_address = (this->memory[PC] | (this->memory[PC + 1] << 8));
+    this->temp_value = this->memory[this->temp_address];
     this->PC += 2;
 }
 
