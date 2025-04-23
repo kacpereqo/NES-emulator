@@ -1,5 +1,6 @@
 import orjson
 from opcode_table import opcode_table
+import argparse
 
 def reduce_json_file(opcode, n):
     file_path = f"data/{opcode}.json"
@@ -14,7 +15,7 @@ def reduce_json_file(opcode, n):
         f.write(orjson.dumps(data).decode("utf-8"))
 
 def generate_test(opcode):
-    file_path = f"data/{hex(opcode)[2:]}.json"
+    file_path = f"data/{opcode :>02x}.json"
 
     with open(file_path, "r") as f:
         data = f.read()
@@ -27,10 +28,13 @@ def generate_test(opcode):
         memory_initial_state =  "\n\t".join(f"memory[0x{address :>04x}] = 0x{value :>02x};" for address, value in initial_state['ram'])
         memory_final_state = "\n\t".join([f"EXPECT_EQ(memory[0x{address :>04x}], 0x{value :>02x});" for address, value in final_state['ram']])
 
+        if "???" in opcode_table[opcode] or "NOP" in opcode_table[opcode]:
+            return ""
 
         result = f"""
         TEST(CPU, instruction_{opcode_table[opcode]}) {{
         std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{{}};
+        GTEST_SKIP() << "Skipping test for opcode 0x{opcode :>02x}";
 
         constexpr std::uint16_t PC = 0x{(initial_state['pc'] ):>04x};
         constexpr uint8_t SP       = 0x{(initial_state['s']) :>02x};
@@ -55,7 +59,12 @@ def generate_test(opcode):
         {memory_final_state}
         }}"""
 
-        print(result)
+        return result
 
 if __name__ == "__main__":
-    generate_test(0x31)
+    code = ""
+
+    for i in range(0x00, 0xFF + 1):
+        code += generate_test(i)
+
+    print(code)

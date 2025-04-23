@@ -16,7 +16,7 @@ opcode_table = {
     0x0E: "ASL_absolute",
     0x0F: "???_unknown",
     0x10: "BPL_relative",
-    0x11: "ORA_indirect_y",
+    0x11: "ORA_indire`ct_y",
     0x12: "???_unknown",
     0x13: "???_unknown",
     0x14: "NOP_zero_page_x",
