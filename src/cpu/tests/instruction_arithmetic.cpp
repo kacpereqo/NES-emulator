@@ -142,7 +142,6 @@ TEST(CPU, instruction_ORA_zero_page) {
 }
 TEST(CPU, instruction_ASL_zero_page) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x06";
 
   constexpr std::uint16_t PC = 0xec81;
   constexpr uint8_t SP = 0x56;
@@ -235,7 +234,6 @@ TEST(CPU, instruction_ORA_immediate) {
 }
 TEST(CPU, instruction_ASL_accumulator) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x0a";
 
   constexpr std::uint16_t PC = 0xd91a;
   constexpr uint8_t SP = 0x8e;
@@ -299,7 +297,6 @@ TEST(CPU, instruction_ORA_absolute) {
 }
 TEST(CPU, instruction_ASL_absolute) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x0e";
 
   constexpr std::uint16_t PC = 0xabba;
   constexpr uint8_t SP = 0x45;
@@ -435,7 +432,6 @@ TEST(CPU, instruction_ORA_zero_page_x) {
 }
 TEST(CPU, instruction_ASL_zero_page_x) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x16";
 
   constexpr std::uint16_t PC = 0xe4fd;
   constexpr uint8_t SP = 0x66;
@@ -569,7 +565,6 @@ TEST(CPU, instruction_ORA_absolute_x) {
 }
 TEST(CPU, instruction_ASL_absolute_x) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x1e";
 
   constexpr std::uint16_t PC = 0x4f7a;
   constexpr uint8_t SP = 0xdc;

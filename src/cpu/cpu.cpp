@@ -28,7 +28,7 @@ void CPU::CPU::run() {
             { XXX, addressing_implied, 5 },
             { PHP, addressing_implied, 3 },
             { ORA, addressing_immediate, 2 },
-            { ASL, addressing_accumulator, 2 },
+            { ASL_accumulator, addressing_accumulator, 2 },
             { XXX, addressing_implied, 2 },
             { NOP, addressing_implied, 4 },
             { ORA, addressing_absolute, 4 },
@@ -282,7 +282,9 @@ void CPU::CPU::run() {
 
     (this->*instruction.addressing_mode_handler)();
     (this->*instruction.instruction_handler)();
-    this->cpu_cycle_delay = instruction.cycles - 1;
+    this->cpu_cycle_delay = instruction.cycles;
+
+    this->cpu_cycle_delay--;
 }
 
 void CPU::CPU::addressing_accumulator() {

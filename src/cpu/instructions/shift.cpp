@@ -5,12 +5,22 @@
 #include "../cpu.h"
 
 // Arithmetic Shift Left
-void CPU::CPU::ASL() {
-    this->temp_value <<= 1;
+void CPU::CPU::ASL_accumulator() {
+    this->A <<= 1;
 
     this->set_processor_status_flag(ProcessorStatus::Carry, this->temp_value & 0x80);
     this->set_processor_status_flag(ProcessorStatus::Zero, this->temp_value == 0);
     this->set_processor_status_flag(ProcessorStatus::Negative, this->temp_value & 0x80);
+}
+
+void CPU::CPU::ASL() {
+
+    const std::uint8_t result = this->temp_value << 1;
+    this->memory[temp_address] = result;
+
+    this->set_processor_status_flag(ProcessorStatus::Carry, this->temp_value & 0x80);
+    this->set_processor_status_flag(ProcessorStatus::Zero, result == 0);
+    this->set_processor_status_flag(ProcessorStatus::Negative, result & 0x80);
 }
 
 // Logical Shift Right

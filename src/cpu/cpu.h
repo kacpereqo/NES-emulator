@@ -156,6 +156,7 @@ private:
 
     /// Shifts
     void ASL(); // Arithmetic Shift Left
+    void ASL_accumulator(); // Arithmetic Shift Left Accumulator
     void LSR(); // Logical Shift Right
     void ROL(); // Rotate Left
     void ROR(); // Rotate Right
