@@ -357,6 +357,7 @@ void CPU::CPU::addressing_zero_page_y() {
 }
 
 void CPU::CPU::addressing_relative() {
-    this->temp_value = this->PC + static_cast<std::int8_t>(this->memory[PC]);
+    this->temp_value = this->memory[PC];
+
     this->PC++;
 }
