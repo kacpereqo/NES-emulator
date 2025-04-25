@@ -3015,7 +3015,6 @@ TEST(CPU, instruction_LDY_immediate) {
 }
 TEST(CPU, instruction_LDA_indirect_x) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0xa1";
 
   constexpr std::uint16_t PC = 0xa6b5;
   constexpr uint8_t SP = 0xb2;
@@ -3053,7 +3052,6 @@ TEST(CPU, instruction_LDA_indirect_x) {
 }
 TEST(CPU, instruction_LDX_immediate) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0xa2";
 
   constexpr std::uint16_t PC = 0xb02b;
   constexpr uint8_t SP = 0x26;
@@ -3083,7 +3081,6 @@ TEST(CPU, instruction_LDX_immediate) {
 }
 TEST(CPU, instruction_LDY_zero_page) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0xa4";
 
   constexpr std::uint16_t PC = 0xfeac;
   constexpr uint8_t SP = 0x21;
