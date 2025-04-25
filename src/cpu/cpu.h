@@ -158,8 +158,11 @@ private:
     void ASL(); // Arithmetic Shift Left
     void ASL_accumulator(); // Arithmetic Shift Left Accumulator
     void LSR(); // Logical Shift Right
+    void LSR_accumulator();
     void ROL(); // Rotate Left
+    void ROL_accumulator();
     void ROR(); // Rotate Right
+    void ROR_accumulator();
 
     /// Jumps & Calls
     void JMP(); // Jump to Address
