@@ -318,9 +318,11 @@ void CPU::CPU::addressing_implied() {
 }
 
 void CPU::CPU::addressing_indirect() {
-    this->temp_value = (this->memory[PC] | (this->memory[PC + 1] << 8));
-    this->PC += 2;
-    this->temp_value = (this->memory[this->temp_value] | (this->memory[this->temp_value + 1] << 8));
+    const std::uint8_t low_byte = this->memory[this->PC++];
+    const std::uint8_t high_byte = this->memory[this->PC++];
+    const std::uint16_t address = (high_byte << 8) | low_byte;
+
+    this->temp_address = (this->memory[address] | (this->memory[(address + 1)] << 8));
 }
 
 void CPU::CPU::addressing_indirect_x() {

@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 23)
 include(FetchContent)
 FetchContent_Declare(
         googletest
-        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+        URL https://codeload.github.com/google/googletest/zip/refs/tags/v1.13.0
 )
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror -Wnull-dereference -Wdouble-promotion -Wformat=2")
@@ -15,7 +15,6 @@ FetchContent_MakeAvailable(googletest)
 
 # Main executable
 add_executable(NES_Emulator
-        main.cpp
         src/cpu/cpu.h
         src/cpu/instructions/load.cpp
         src/cpu/instructions/transfer.cpp
@@ -34,6 +33,8 @@ add_executable(NES_Emulator
         src/apu/apu.h
         src/cpu/cpu.cpp
         src/cpu/tests/instruction_arithmetic.cpp
+        src/cpu/tests/instruction_shift.cpp
+        main.cpp
 )
 
 # ========== TEST SETUP ==========
@@ -41,6 +42,7 @@ enable_testing()
 
 # Add test executable
 add_executable(NES_Tests
+        src/cpu/tests/instruction_shift.cpp
         src/cpu/tests/instruction_arithmetic.cpp
         src/cpu/cpu.h
         src/cpu/instructions/load.cpp
@@ -61,6 +63,8 @@ add_executable(NES_Tests
         src/cpu/cpu.cpp
         src/cpu/tests/instruction_arithmetic.cpp
 )
+
+
 
 # Link test executable with gtest
 target_link_libraries(NES_Tests
