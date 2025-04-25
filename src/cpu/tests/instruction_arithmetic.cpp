@@ -464,7 +464,6 @@ TEST(CPU, instruction_ASL_zero_page_x) {
 }
 TEST(CPU, instruction_CLC_implied) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x18";
 
   constexpr std::uint16_t PC = 0x09a8;
   constexpr uint8_t SP = 0x26;
@@ -1089,7 +1088,6 @@ TEST(CPU, instruction_ROL_zero_page_x) {
 }
 TEST(CPU, instruction_SEC_implied) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x38";
 
   constexpr std::uint16_t PC = 0x85d6;
   constexpr uint8_t SP = 0x43;
@@ -1683,7 +1681,6 @@ TEST(CPU, instruction_LSR_zero_page_x) {
 }
 TEST(CPU, instruction_CLI_implied) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x58";
 
   constexpr std::uint16_t PC = 0x448a;
   constexpr uint8_t SP = 0xf5;
@@ -2288,7 +2285,6 @@ TEST(CPU, instruction_ROR_zero_page_x) {
 }
 TEST(CPU, instruction_SEI_implied) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0x78";
 
   constexpr std::uint16_t PC = 0x3eb3;
   constexpr uint8_t SP = 0xa0;
@@ -3609,7 +3605,6 @@ TEST(CPU, instruction_LDX_zero_page_y) {
 }
 TEST(CPU, instruction_CLV_implied) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0xb8";
 
   constexpr std::uint16_t PC = 0xdfde;
   constexpr uint8_t SP = 0x95;
@@ -4302,7 +4297,6 @@ TEST(CPU, instruction_DEC_zero_page_x) {
 }
 TEST(CPU, instruction_CLD_implied) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  GTEST_SKIP() << "Skipping test for opcode 0xd8";
 
   constexpr std::uint16_t PC = 0x240c;
   constexpr uint8_t SP = 0xfa;
@@ -4896,36 +4890,35 @@ TEST(CPU, instruction_CLD_implied) {
 //   EXPECT_EQ(memory[0x84e7], 0x6e);
 //   EXPECT_EQ(memory[0x84e8], 0x14);
 // }
-// TEST(CPU, instruction_SED_implied) {
-//   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-//   GTEST_SKIP() << "Skipping test for opcode 0xf8";
-//
-//   constexpr std::uint16_t PC = 0x386c;
-//   constexpr uint8_t SP = 0xbc;
-//   constexpr uint8_t A = 0x19;
-//   constexpr uint8_t X = 0xb1;
-//   constexpr uint8_t Y = 0x1a;
-//   constexpr uint8_t P = 0x28;
-//
-//   memory[0x386c] = 0xf8;
-//   memory[0x386d] = 0x87;
-//   memory[0x386e] = 0x7a;
-//
-//   CPU::CPU cpu{memory, PC, SP, A, X, Y, P};
-//
-//   cpu.run();
-//
-//   EXPECT_EQ(cpu.get_PC(), 0x386d);
-//   EXPECT_EQ(cpu.get_SP(), 0xbc);
-//   EXPECT_EQ(cpu.get_A(), 0x19);
-//   EXPECT_EQ(cpu.get_X(), 0xb1);
-//   EXPECT_EQ(cpu.get_Y(), 0x1a);
-//   EXPECT_EQ(cpu.get_P(), 0x28);
-//
-//   EXPECT_EQ(memory[0x386c], 0xf8);
-//   EXPECT_EQ(memory[0x386d], 0x87);
-//   EXPECT_EQ(memory[0x386e], 0x7a);
-// }
+TEST(CPU, instruction_SED_implied) {
+  std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
+
+  constexpr std::uint16_t PC = 0x386c;
+  constexpr uint8_t SP = 0xbc;
+  constexpr uint8_t A = 0x19;
+  constexpr uint8_t X = 0xb1;
+  constexpr uint8_t Y = 0x1a;
+  constexpr uint8_t P = 0x28;
+
+  memory[0x386c] = 0xf8;
+  memory[0x386d] = 0x87;
+  memory[0x386e] = 0x7a;
+
+  CPU::CPU cpu{memory, PC, SP, A, X, Y, P};
+
+  cpu.run();
+
+  EXPECT_EQ(cpu.get_PC(), 0x386d);
+  EXPECT_EQ(cpu.get_SP(), 0xbc);
+  EXPECT_EQ(cpu.get_A(), 0x19);
+  EXPECT_EQ(cpu.get_X(), 0xb1);
+  EXPECT_EQ(cpu.get_Y(), 0x1a);
+  EXPECT_EQ(cpu.get_P(), 0x28);
+
+  EXPECT_EQ(memory[0x386c], 0xf8);
+  EXPECT_EQ(memory[0x386d], 0x87);
+  EXPECT_EQ(memory[0x386e], 0x7a);
+}
 // TEST(CPU, instruction_SBC_absolute_y) {
 //   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
 //   GTEST_SKIP() << "Skipping test for opcode 0xf9";
