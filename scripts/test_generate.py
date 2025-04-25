@@ -14,13 +14,13 @@ def reduce_json_file(opcode, n):
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(orjson.dumps(data).decode("utf-8"))
 
-def generate_test(opcode):
+def generate_test(opcode, n = 0):
     file_path = f"data/{opcode :>02x}.json"
 
     with open(file_path, "r") as f:
         data = f.read()
         json = orjson.loads(data)
-        json = json[0]
+        json = json[n]
 
         initial_state = json["initial"]
         final_state = json["final"]
@@ -64,7 +64,4 @@ def generate_test(opcode):
 if __name__ == "__main__":
     code = ""
 
-    for i in range(0x00, 0xFF + 1):
-        code += generate_test(i)
-
-    print(code)
+    print(generate_test(0xB0, 3))
