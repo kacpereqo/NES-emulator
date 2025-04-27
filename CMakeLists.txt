@@ -9,9 +9,15 @@ FetchContent_Declare(
         URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
 )
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror -Wnull-dereference -Wdouble-promotion -Wformat=2")
-
 FetchContent_MakeAvailable(googletest)
+
+FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG release-2.30.2 # or whatever release you want
+)
+
+FetchContent_MakeAvailable(SDL2)
 
 # Main executable
 add_executable(NES_Emulator
@@ -33,7 +39,6 @@ add_executable(NES_Emulator
         src/ppu/ppu.h
         src/apu/apu.h
         src/cpu/cpu.cpp
-        src/cpu/tests/instruction_arithmetic.cpp
 )
 
 # ========== TEST SETUP ==========
@@ -67,6 +72,8 @@ target_link_libraries(NES_Tests
         gtest
         gtest_main
 )
+
+target_link_libraries(NES_Emulator PRIVATE SDL2main SDL2 mingw32)
 
 
 # Discover tests with CTest

@@ -7,7 +7,7 @@
 
 #include <cstdint>
 #include <array>
-#include <iostream>
+#include<iostream>
 
 namespace CPU {
 
