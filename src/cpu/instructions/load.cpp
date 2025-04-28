@@ -16,16 +16,16 @@ void CPU::CPU::LDA() {
 void CPU::CPU::LDX() {
     this->X = this->temp_value;
 
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
+    this->set_processor_status_flag(ProcessorStatus::Zero, this->X == 0);
+    this->set_processor_status_flag(ProcessorStatus::Negative, this->X & 0x80);
 }
 
 // Load Index Register Y
 void CPU::CPU::LDY() {
     this->Y = this->temp_value;
 
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
+    this->set_processor_status_flag(ProcessorStatus::Zero, this->Y == 0);
+    this->set_processor_status_flag(ProcessorStatus::Negative, this->Y & 0x80);
 }
 
 // Store Accumulator

@@ -21,7 +21,7 @@ void CPU::CPU::TXS(){
 void CPU::CPU::PHA(){
     this->push_to_stack(this->A);
 }
-`
+
 // Push Processor Status on Stack
 void CPU::CPU::PHP(){
     const std::uint8_t temp_P = this->P | ProcessorStatus::BreakCommand;

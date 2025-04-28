@@ -18,9 +18,10 @@ void CPU::CPU::ADC(){
         // TODO:
         // refactor
 
-        uint8_t carry_in = this->get_processor_status_flag(ProcessorStatus::Carry);
-        uint8_t a = this->A;
-        uint8_t value = this->temp_value;
+      const uint8_t carry_in =
+            this->get_processor_status_flag(ProcessorStatus::Carry);
+        const uint8_t a = this->A;
+        const uint8_t value = this->temp_value;
 
         uint8_t low_nibble_sum = (a & 0x0F) + (value & 0x0F) + carry_in;
 
@@ -60,12 +61,20 @@ void CPU::CPU::ADC(){
 
 // Subtract with Carry
 void CPU::CPU::SBC(){
-    this->A += ~this->temp_value + this->get_processor_status_flag(ProcessorStatus::Carry);
+    // TODO:
+    // implement decimal mode
+    if (this->get_processor_status_flag(ProcessorStatus::DecimalMode)) std::cout << "Decimal mode not implemented" << std::endl;
 
-    // this->set_processor_status_flag(ProcessorStatus::Carry, this->A  0xFF);
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(ProcessorStatus::Overflow, ((this->A ^ this->temp_value) & (this->A ^ this->A)) & 0x80);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
+    // A = A - memory - ~C
+    const auto result = static_cast<std::int16_t>(this->A  - this->temp_value - !this->get_processor_status_flag(ProcessorStatus::Carry));
+    this->A = result & 0xFF;
+
+    bool overflow = !((result ^ this->A) & (result ^ static_cast<std::int8_t>(~this->temp_value)) & 0x80);
+
+    this->set_processor_status_flag(ProcessorStatus::Carry, result >= 0x00);
+    this->set_processor_status_flag(ProcessorStatus::Zero, result == 0);
+    this->set_processor_status_flag(ProcessorStatus::Overflow, overflow);
+    this->set_processor_status_flag(ProcessorStatus::Negative, result & 0x80);
 }
 
 // Compare Accumulator
