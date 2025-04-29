@@ -3,15 +3,51 @@ project(NES_Emulator)
 
 set(CMAKE_CXX_STANDARD 23)
 
+SET(PROJECT_NAME NES_Emulator)
+
+SET (GTEST_VERSION 1.14.0)
+SET (SDL2_VERSION 2.30.2)
+SET (SDL2_MIXER_VERSION 2.8.1)
+
+set(SDL2MIXER_OPUS  OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_FLAC   OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_MOD OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_MOD_XMP OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_MOD_MODPLUG OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_MIDI_FLUIDSYNTH OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_MP3_MPG123 OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_MP3_SMPEG OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_VORBIS_VORBISFILE OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_VORBIS_TREMOR OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_FLAC_DRFLAC OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_FLAC_LIBFLAC OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_MIDI_FLUIDSYNTH OFF CACHE BOOL "" FORCE)
+
 include(FetchContent)
 FetchContent_Declare(
         googletest
         URL https://codeload.github.com/google/googletest/zip/refs/tags/v1.13.0
 )
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror -Wnull-dereference -Wdouble-promotion -Wformat=2")
-
 FetchContent_MakeAvailable(googletest)
+
+FetchContent_Declare(
+        SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG release-${SDL2_VERSION}
+)
+
+FetchContent_MakeAvailable(SDL2)
+
+FetchContent_Declare(
+        SDL2_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG release-${SDL2_MIXER_VERSION}
+)
+
+
+FetchContent_MakeAvailable(SDL2_mixer)
+
 
 # Main executable
 add_executable(NES_Emulator
@@ -32,6 +68,7 @@ add_executable(NES_Emulator
         src/ppu/ppu.h
         src/apu/apu.h
         src/cpu/cpu.cpp
+
         src/cpu/tests/instruction_arithmetic.cpp
         src/cpu/tests/instruction_shift.cpp
         main.cpp
@@ -71,6 +108,8 @@ target_link_libraries(NES_Tests
         gtest
         gtest_main
 )
+
+target_link_libraries(NES_Emulator PRIVATE SDL2main SDL2 SDL2_mixer)
 
 
 # Discover tests with CTest
