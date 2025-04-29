@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 
 int main(int argv, char** args) {
-    std::array<std::uint8_t, 0xFFFF> memory{};
-    APU::APU apu{memory};
+    // std::array<std::uint8_t, 0xFFFF> memory{};
+    // APU::APU apu{memory};
 
     // SDL_Init(SDL_INIT_AUDIO);
 
