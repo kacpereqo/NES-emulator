@@ -66,14 +66,13 @@ void CPU::CPU::SBC(){
     if (this->get_processor_status_flag(ProcessorStatus::DecimalMode)) std::cout << "Decimal mode not implemented" << std::endl;
 
     // A = A - memory - ~C
+    const std::uint8_t temp_A = this->A;
     const auto result = static_cast<std::int16_t>(this->A  - this->temp_value - !this->get_processor_status_flag(ProcessorStatus::Carry));
     this->A = result & 0xFF;
 
-    bool overflow = !((result ^ this->A) & (result ^ static_cast<std::int8_t>(~this->temp_value)) & 0x80);
-
     this->set_processor_status_flag(ProcessorStatus::Carry, result >= 0x00);
     this->set_processor_status_flag(ProcessorStatus::Zero, result == 0);
-    this->set_processor_status_flag(ProcessorStatus::Overflow, overflow);
+    this->set_processor_status_flag(ProcessorStatus::Overflow, ((temp_A ^ this->temp_value) & (temp_A ^ result) & 0x80) != 0);
     this->set_processor_status_flag(ProcessorStatus::Negative, result & 0x80);
 }
 
