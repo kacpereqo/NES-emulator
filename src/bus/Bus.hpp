@@ -11,13 +11,15 @@
 namespace Bus {
 class Bus {
 public:
-  Bus(APU::APU &apu, CPU::CPU &cpu, PPU::PPU &ppu)
-      : apu{apu}, cpu{cpu}, ppu{ppu} {}
+  std::array<std::byte, 0xFFFF> memory{};
 
-private:
-  APU::APU &apu;
-  CPU::CPU &cpu;
-  PPU::PPU &ppu;
+  std::byte read(const std::uint16_t address) const {
+    return this->memory[address];
+  }
+
+  void write(const std::uint16_t address, const std::byte value) {
+    this->memory[address] = value;
+  }
 };
 } // namespace Bus
 
