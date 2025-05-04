@@ -8,9 +8,9 @@
 #include <array>
 #include <cstdint>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <string>
-#include <iostream>
 
 #include "../apu/apu.h"
 #include "../cpu/cpu.h"
@@ -27,11 +27,11 @@
 // $2000–$2007 	    $0008 	NES PPU registers
 // $2008–$3FFF 	    $1FF8 	Mirrors of $2000–$2007 (repeats every 8 bytes)
 // $4000–$4017 	    $0018 	NES APU and I/O registers
-// $4018–$401F 	    $0008 	APU and I/O functionality that is normally disabled. See CPU Test Mode.
-// $4020–$FFFF      $BFE0   PRG ROM, PRG RAM, or other memory
+// $4018–$401F 	    $0008 	APU and I/O functionality that is normally
+// disabled. See CPU Test Mode. $4020–$FFFF      $BFE0   PRG ROM, PRG RAM, or
+// other memory
 // - $6000–$7FFF    $2000   Usually cartridge RAM, when present.
 // - $8000–$FFFF 	$8000   Usually cartridge ROM and mapper registers.
-
 
 // struct Memory {
 //     std::array<std::uint8_t, 0x8000> internal_ram{};
@@ -48,42 +48,48 @@
 //     std::array<std::uint8_t, 0x06> reset_vector_table{};
 // };
 
-
 namespace NES {
-    class NES {
+class NES {
 
-    public:
-        [[noreturn]] void run() {
-            // for(;;)
-            for(int i = 0; i < 2;i++)
-                cpu.run();
-        }
-        NES() : cpu{memory}, apu{memory}{}
+public:
+  [[noreturn]] void run() {
+    for (int i = 0; i < 10; i++) {
+      cpu.run();
 
-        void load_rom(const std::array<std::uint8_t, 0xFFFF> &data) {
-            // Load data into memory
-            std::copy(data.begin(), data.end(), memory.begin());
-            std::cout << "Loaded memory" << std::endl;
-        }
+      for (int j = 0; j < 3; j++)
+        ppu.run();
+    }
+  }
+  NES() : cpu{memory}, apu{memory}, ppu(memory) {
+    cpu.init();
+    apu.init();
+    ppu.init();
+  }
 
-        void load_rom(const std::string &rom_path) {
-            // Load ROM into memory
-            std::ifstream rom_file(rom_path, std::ios::binary);
-            if (!rom_file) {
-                throw std::runtime_error("Failed to open ROM file");
-            }
-            rom_file.read(reinterpret_cast<char *>(memory.data()), memory.size());
-            std::cout << "Loaded ROM: " << rom_path << std::endl;
-            std::cout << "Memory size: " << memory.size() << std::endl;
-        }
+  void load_rom(const std::array<std::uint8_t, 0xFFFF> &data) {
+    // Load data into memory
+    std::copy(data.begin(), data.end(), memory.begin());
+    std::cout << "Loaded memory" << std::endl;
+  }
 
-    private:
-        CPU::CPU cpu;
-        APU::APU apu;
-        PPU::PPU ppu;
+  void load_rom(const std::string &rom_path) {
+    // Load ROM into memory
+    std::ifstream rom_file(rom_path, std::ios::binary);
+    if (!rom_file) {
+      throw std::runtime_error("Failed to open ROM file");
+    }
+    rom_file.read(reinterpret_cast<char *>(memory.data()), memory.size());
+    std::cout << "Loaded ROM: " << rom_path << std::endl;
+    std::cout << "Memory size: " << memory.size() << std::endl;
+  }
 
-        std::array<std::uint8_t, 0xFFFF> memory{};
-    };
-}
+private:
+  CPU::CPU cpu;
+  APU::APU apu;
+  PPU::PPU ppu;
 
-#endif //NES_H
+  std::array<std::uint8_t, 0xFFFF> memory{};
+};
+} // namespace NES
+
+#endif // NES_H

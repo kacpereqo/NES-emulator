@@ -70,6 +70,8 @@ add_executable(NES_Emulator
         src/apu/apu.h
         src/cpu/cpu.cpp
         main.cpp
+        src/ppu/enums.hpp
+        src/bus/Bus.hpp
 )
 
 # ========== TEST SETUP ==========
