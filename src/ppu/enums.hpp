@@ -38,13 +38,6 @@ enum Controller : std::uint8_t {
   Nametable = 0b11 << 0 // Nametable select (2 bits)
 };
 
-namespace NameTable {
-enum NameTable : std::uint8_t {
-  Table_0 = 0x2000, // $2000
-  Table_1 = 0x2400, // $2400
-  Table_2 = 0x2800, // $2800
-  Table_3 = 0x2C00, // $2C00
-};
 }
 
 } // namespace Controller
@@ -74,6 +67,6 @@ enum Status : std::uint8_t {
   // Lower 5 bits are unused
 };
 }
-} // namespace PPU
+ // namespace PPU
 
 #endif // ENUMS_HPP

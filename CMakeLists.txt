@@ -24,10 +24,13 @@ set(SDL2MIXER_FLAC_LIBFLAC OFF CACHE BOOL "" FORCE)
 set(SDL2MIXER_MIDI_FLUIDSYNTH OFF CACHE BOOL "" FORCE)
 set(SDL2MIXER_WAVPACK OFF CACHE BOOL "" FORCE)
 
-set(SDL2_LIB_DIR C:/Users/remza/CLionProjects/NES-emulator/external/SDL2/lib)
-set(SDL2_INCLUDE_DIR C:/Users/remza/CLionProjects/NES-emulator/external/SDL2/include)
-set(SDL2_LIBRARY C:/Users/remza/CLionProjects/NES-emulator/external/SDL2/bin)
-set (CMAKE_BUILD_DIR "C:/Users/remza/CLionProjects/NES-emulator/cmake-build-debug")
+set(EXTERNAL_LIB ./external)
+
+set(SDL2_LIB_DIR ${EXTERNAL_LIB}/SDL2/lib)
+set(SDL2_INCLUDE_DIR ${EXTERNAL_LIB}/SDL2/include)
+set(SDL2_LIBRARY ${EXTERNAL_LIB}/SDL2/bin)
+
+set (CMAKE_BUILD_DIR ./)
 set(OUTPUT_DIR "${CMAKE_BUILD_DIR}")
 
 
@@ -71,7 +74,8 @@ add_executable(NES_Emulator
         src/cpu/cpu.cpp
         main.cpp
         src/ppu/enums.hpp
-        src/bus/Bus.hpp
+        src/bus/bus.hpp
+        src/bus/bus.hpp
 )
 
 # ========== TEST SETUP ==========
