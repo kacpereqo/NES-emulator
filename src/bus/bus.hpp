@@ -14,12 +14,12 @@ constexpr std::uint16_t RAM_SIZE = 0x0800; // 2KB of RAM
 
 class Bus {
 public:
-    std::byte read(const std::uint16_t address) const {
+    [[nodiscard]] std::byte cpu_read(const std::uint16_t address)const {
         return ram[address % RAM_SIZE];
     }
 
-    void write(const std::uint16_t address,const std::byte value) {
-        ram[address % RAM_SIZE] = value;
+    void cpu_write(const std::uint16_t address,const std::byte data) {
+        ram[address % RAM_SIZE] = data;
     }
 
 private:

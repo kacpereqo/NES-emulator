@@ -9,6 +9,8 @@
 #include <cstdint>
 #include <iostream>
 
+#include "../bus/bus.hpp"
+
 namespace CPU {
 
 namespace ProcessorStatus {
@@ -31,7 +33,8 @@ static constexpr std::uint8_t DEFAULT_STATUS{ProcessorStatus::Unused |
                                              ProcessorStatus::DecimalMode};
 static constexpr std::uint16_t MEMORY_SIZE{0xFFFF}; // 8B * 65535 = 64KB
 
-class CPU {
+class CPU
+{
 public:
   struct Instruction {
     using InstructionHandler = void (CPU::CPU::*)();
@@ -43,13 +46,13 @@ public:
   };
   /// Constructor
 
-  explicit CPU(std::array<std::uint8_t, MEMORY_SIZE> &memory)
-      : PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0}, memory{memory},
-        P{DEFAULT_STATUS} {}
-  CPU(std::array<std::uint8_t, MEMORY_SIZE> &memory, const std::uint16_t PC,
+  explicit CPU(Bus::Bus &bus)
+      : bus{bus}, PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0},
+        Y{0}, P{DEFAULT_STATUS} {}
+  CPU(Bus::Bus& bus, const std::uint16_t PC,
       const std::uint8_t SP, const std::uint8_t A, const std::uint8_t X,
       const std::uint8_t Y, const std::uint8_t P)
-      : PC{PC}, SP{SP}, A{A}, X{X}, Y{Y}, memory{memory}, P{P} {}
+      : bus{bus}, PC{PC}, SP{SP}, A{A}, X{X}, Y{Y}, P{P} {}
 
   [[nodiscard]] std::uint16_t get_PC() const { return PC; }
   [[nodiscard]] std::uint8_t get_SP() const { return SP; }
@@ -63,6 +66,8 @@ public:
 
 private:
   bool after_reset{true};
+
+  Bus::Bus & bus;
 
   std::uint8_t cpu_cycle_delay{0};
 
@@ -78,7 +83,7 @@ private:
   std::uint8_t X;   // Index Register X
   std::uint8_t Y;   // Index Register Y
 
-  std::array<std::uint8_t, 0xFFFF> &memory;
+  // std::array<std::uint8_t, 0xFFFF> &memory;
 
   std::uint8_t P; // Processor Status
 

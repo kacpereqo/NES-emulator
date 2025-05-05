@@ -13,6 +13,7 @@
 #include <string>
 
 #include "../apu/apu.h"
+#include "../bus/bus.hpp"
 #include "../cpu/cpu.h"
 #include "../ppu/ppu.h"
 
@@ -87,6 +88,8 @@ private:
   CPU::CPU cpu;
   APU::APU apu;
   PPU::PPU ppu;
+
+  Bus::Bus bus;
 
   std::array<std::uint8_t, 0xFFFF> memory{};
 };
