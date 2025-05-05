@@ -22,6 +22,14 @@ set(SDL2MIXER_VORBIS_TREMOR OFF CACHE BOOL "" FORCE)
 set(SDL2MIXER_FLAC_DRFLAC OFF CACHE BOOL "" FORCE)
 set(SDL2MIXER_FLAC_LIBFLAC OFF CACHE BOOL "" FORCE)
 set(SDL2MIXER_MIDI_FLUIDSYNTH OFF CACHE BOOL "" FORCE)
+set(SDL2MIXER_WAVPACK OFF CACHE BOOL "" FORCE)
+
+set(SDL2_LIB_DIR C:/Users/remza/CLionProjects/NES-emulator/external/SDL2/lib)
+set(SDL2_INCLUDE_DIR C:/Users/remza/CLionProjects/NES-emulator/external/SDL2/include)
+set(SDL2_LIBRARY C:/Users/remza/CLionProjects/NES-emulator/external/SDL2/bin)
+set (CMAKE_BUILD_DIR "C:/Users/remza/CLionProjects/NES-emulator/cmake-build-debug")
+set(OUTPUT_DIR "${CMAKE_BUILD_DIR}")
+
 
 include(FetchContent)
 FetchContent_Declare(
@@ -31,22 +39,15 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-FetchContent_Declare(
-        SDL2
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG release-${SDL2_VERSION}
+
+
+include_directories(
+        ${SDL2_INCLUDE_DIR}
 )
 
-FetchContent_MakeAvailable(SDL2)
-
-FetchContent_Declare(
-        SDL2_mixer
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-        GIT_TAG release-${SDL2_MIXER_VERSION}
+link_directories(
+        ${SDL2_LIB_DIR}
 )
-
-
-FetchContent_MakeAvailable(SDL2_mixer)
 
 
 # Main executable
@@ -68,10 +69,9 @@ add_executable(NES_Emulator
         src/ppu/ppu.h
         src/apu/apu.h
         src/cpu/cpu.cpp
-
-        src/cpu/tests/instruction_arithmetic.cpp
-        src/cpu/tests/instruction_shift.cpp
         main.cpp
+        src/ppu/enums.hpp
+        src/bus/Bus.hpp
 )
 
 # ========== TEST SETUP ==========
@@ -101,17 +101,28 @@ add_executable(NES_Tests
         src/cpu/tests/instruction_arithmetic.cpp
 )
 
-
-
 # Link test executable with gtest
 target_link_libraries(NES_Tests
         gtest
         gtest_main
 )
 
-target_link_libraries(NES_Emulator PRIVATE SDL2main SDL2 SDL2_mixer)
+target_link_libraries(NES_Emulator PRIVATE
+        mingw32
+        SDL2main
+        SDL2
+        SDL2_image
+        SDL2_ttf
+)
 
+message(STATUS "Copying all dependencies to destination folder...")
+file(GLOB PROJECT_DEPENDENCIES ${SDL2_LIBRARY}/*.dll)
 
-# Discover tests with CTest
+foreach(DEPENDENCY ${PROJECT_DEPENDENCIES})
+    get_filename_component(DEPENDENCY_NAME ${DEPENDENCY} NAME)
+    message(STATUS "Copying ${DEPENDENCY_NAME} to ${OUTPUT_DIR}")
+    file(COPY ${DEPENDENCY} DESTINATION ${OUTPUT_DIR})
+endforeach ()
+
 include(GoogleTest)
 gtest_discover_tests(NES_Tests)
