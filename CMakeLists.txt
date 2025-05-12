@@ -76,6 +76,7 @@ add_executable(NES_Emulator
         src/ppu/enums.hpp
         src/bus/bus.hpp
         src/bus/bus.hpp
+        src/cpu/enum.hpp
 )
 
 # ========== TEST SETUP ==========

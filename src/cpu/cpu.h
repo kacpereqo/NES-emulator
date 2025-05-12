@@ -5,7 +5,7 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include <array>
+#include "enum.hpp"
 #include <cstdint>
 #include <iostream>
 
@@ -13,32 +13,19 @@
 
 namespace CPU {
 
-namespace ProcessorStatus {
-enum ProcessorStatus : std::uint8_t {
-  Carry = 1 << 0,
-  Zero = 1 << 1,
-  InterruptDisable = 1 << 2,
-  DecimalMode = 1 << 3,
-  BreakCommand = 1 << 4,
-  Unused = 1 << 5, // 7th bit is unused
-  Overflow = 1 << 6,
-  Negative = 1 << 7,
-};
-}
-
 static constexpr std::uint8_t STACK_START{0xFD}; // Stack starts at 0x0100
-static constexpr std::uint16_t PROGRAM_COUNTER{0xFFFC}; // Program Counter starts at 0x8000
+static constexpr std::uint16_t PROGRAM_COUNTER{
+    0xFFFC}; // Program Counter starts at 0x8000
 static constexpr std::uint8_t DEFAULT_STATUS{ProcessorStatus::Unused |
                                              ProcessorStatus::InterruptDisable |
                                              ProcessorStatus::DecimalMode};
 static constexpr std::uint16_t MEMORY_SIZE{0xFFFF}; // 8B * 65535 = 64KB
 
-class CPU
-{
+class CPU {
 public:
   struct Instruction {
-    using InstructionHandler = void (CPU::CPU::*)();
-    using AddressingModeHandler = void (CPU::CPU::*)();
+    using InstructionHandler = void (CPU::*)();
+    using AddressingModeHandler = void (CPU::*)();
 
     InstructionHandler instruction_handler;
     AddressingModeHandler addressing_mode_handler;
@@ -47,11 +34,12 @@ public:
   /// Constructor
 
   explicit CPU(Bus::Bus &bus)
-      : bus{bus}, PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0},
-        Y{0}, P{DEFAULT_STATUS} {}
-  CPU(Bus::Bus& bus, const std::uint16_t PC,
-      const std::uint8_t SP, const std::uint8_t A, const std::uint8_t X,
-      const std::uint8_t Y, const std::uint8_t P)
+      : bus{bus}, PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0},
+        P{DEFAULT_STATUS} {}
+
+  CPU(Bus::Bus &bus, const std::uint16_t PC, const std::uint8_t SP,
+      const std::uint8_t A, const std::uint8_t X, const std::uint8_t Y,
+      const std::uint8_t P)
       : bus{bus}, PC{PC}, SP{SP}, A{A}, X{X}, Y{Y}, P{P} {}
 
   [[nodiscard]] std::uint16_t get_PC() const { return PC; }
@@ -67,7 +55,7 @@ public:
 private:
   bool after_reset{true};
 
-  Bus::Bus & bus;
+  Bus::Bus &bus;
 
   std::uint8_t cpu_cycle_delay{0};
 

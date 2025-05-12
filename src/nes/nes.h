@@ -61,7 +61,7 @@ public:
         ppu.run();
     }
   }
-  NES() : cpu{memory}, apu{memory}, ppu(memory) {
+  NES() : cpu{bus}, apu{memory}, ppu(memory) {
     cpu.init();
     apu.init();
     ppu.init();
