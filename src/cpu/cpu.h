@@ -19,7 +19,7 @@ static constexpr std::uint16_t PROGRAM_COUNTER{
 static constexpr std::uint8_t DEFAULT_STATUS{ProcessorStatus::Unused |
                                              ProcessorStatus::InterruptDisable |
                                              ProcessorStatus::DecimalMode};
-static constexpr std::uint16_t MEMORY_SIZE{0xFFFF}; // 8B * 65535 = 64KB
+static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
 
 class CPU {
 public:
@@ -33,11 +33,11 @@ public:
   };
   /// Constructor
 
-  explicit CPU(Bus::Bus &bus)
+  explicit CPU(Bus::AbstractBus &bus)
       : bus{bus}, PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0},
         P{DEFAULT_STATUS} {}
 
-  CPU(Bus::Bus &bus, const std::uint16_t PC, const std::uint8_t SP,
+  CPU(Bus::AbstractBus &bus, const std::uint16_t PC, const std::uint8_t SP,
       const std::uint8_t A, const std::uint8_t X, const std::uint8_t Y,
       const std::uint8_t P)
       : bus{bus}, PC{PC}, SP{SP}, A{A}, X{X}, Y{Y}, P{P} {}
@@ -55,7 +55,7 @@ public:
 private:
   bool after_reset{true};
 
-  Bus::Bus &bus;
+  Bus::AbstractBus &bus;
 
   std::uint8_t cpu_cycle_delay{0};
 

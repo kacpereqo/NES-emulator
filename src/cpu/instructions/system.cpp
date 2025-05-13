@@ -11,7 +11,11 @@ void CPU::CPU::BRK() {
   this->push_to_stack(this->PC);
   this->push_to_stack(this->P);
 
-  this->PC = this->bus.cpu_read(0xFFFE) | (this->bus.cpu_read(0xFFFF) << 8);
+  // this->PC = this->bus.cpu_read(0xFFFE) | (this->bus.cpu_read(0xFFFF) << 8);
+  // this->PC = (this->memory[0xFFFF] << 8) | this->memory[0xFFFF - 1];
+  this->PC = this->bus.cpu_read(0xFFFF) << 8;
+  this->PC |= this->bus.cpu_read(0xFFFE);
+
   this->set_processor_status_flag(ProcessorStatus::BreakCommand, false);
   this->set_processor_status_flag(ProcessorStatus::InterruptDisable, true);
 }

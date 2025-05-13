@@ -312,7 +312,7 @@ void CPU::CPU::addressing_absolute_y() {
 }
 
 void CPU::CPU::addressing_immediate() {
-  this->temp_value = this->bus.cpu_read(this->PC);
+  this->temp_value = this->bus.cpu_read(this->PC++);
 }
 
 void CPU::CPU::addressing_implied() { ; }
@@ -327,10 +327,10 @@ void CPU::CPU::addressing_indirect() {
 }
 
 void CPU::CPU::addressing_indirect_x() {
-  this->temp_address = this->bus.cpu_read(PC++);
+  this->temp_address = (this->bus.cpu_read(this->PC++) + this->X) & 0xFF;
   this->temp_address =
       (this->bus.cpu_read(this->temp_address) |
-       (this->bus.cpu_read(this->temp_address + 1) & 0xFF << 8));
+       (this->bus.cpu_read((this->temp_address + 1) & 0xFF) << 8));
 
   this->temp_value = this->bus.cpu_read(this->temp_address);
 }
@@ -365,6 +365,4 @@ void CPU::CPU::addressing_zero_page_y() {
 
 void CPU::CPU::addressing_relative() {
   this->temp_value = this->bus.cpu_read(PC++);
-
-  this->PC++;
 }

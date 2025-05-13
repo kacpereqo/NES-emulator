@@ -3,7 +3,7 @@
 
 TEST(CPU, initial_state) {
   std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
   const CPU::CPU cpu{bus};
 
   // Test the initial state of the CPU
@@ -32,7 +32,7 @@ TEST(CPU, instruction_BRK_implied) {
   memory[0xffff] = 0x25;
   memory[0x25d4] = 0xed;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -73,7 +73,7 @@ TEST(CPU, instruction_ORA_indirect_x) {
   memory[0x00b5] = 0xeb;
   memory[0xeb81] = 0x13;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -109,7 +109,7 @@ TEST(CPU, instruction_ORA_zero_page) {
   memory[0x4d73] = 0x36;
   memory[0x00ca] = 0xa5;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -142,7 +142,7 @@ TEST(CPU, instruction_ASL_zero_page) {
   memory[0xec83] = 0x7c;
   memory[0x0089] = 0x42;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -174,7 +174,7 @@ TEST(CPU, instruction_PHP_implied) {
   memory[0x2f82] = 0x60;
   memory[0x2f83] = 0xbe;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -206,7 +206,7 @@ TEST(CPU, instruction_ORA_immediate) {
   memory[0xb1b8] = 0xfb;
   memory[0xb1b9] = 0xcb;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -237,7 +237,7 @@ TEST(CPU, instruction_ASL_accumulator) {
   memory[0xd91b] = 0x78;
   memory[0xd91c] = 0x2d;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -270,7 +270,7 @@ TEST(CPU, instruction_ORA_absolute) {
   memory[0x4663] = 0xe5;
   memory[0xa822] = 0x28;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -305,7 +305,7 @@ TEST(CPU, instruction_ASL_absolute) {
   memory[0xe016] = 0x0a;
   memory[0xabbd] = 0x8d;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -338,7 +338,7 @@ TEST(CPU, instruction_BPL_relative) {
   memory[0x4485] = 0x36;
   memory[0x4486] = 0xa8;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -373,7 +373,7 @@ TEST(CPU, instruction_ORA_indirect_y) {
   memory[0xb672] = 0x3e;
   memory[0xb772] = 0x15;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -410,7 +410,7 @@ TEST(CPU, instruction_ORA_zero_page_x) {
   memory[0x0022] = 0x51;
   memory[0x0078] = 0xf1;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -445,7 +445,7 @@ TEST(CPU, instruction_ASL_zero_page_x) {
   memory[0x0026] = 0x12;
   memory[0x00d4] = 0xd2;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -478,7 +478,7 @@ TEST(CPU, instruction_CLC_implied) {
   memory[0x09a9] = 0xc9;
   memory[0x09aa] = 0x9b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -511,7 +511,7 @@ TEST(CPU, instruction_ORA_absolute_y) {
   memory[0x5298] = 0xf2;
   memory[0xf09e] = 0xac;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -547,7 +547,7 @@ TEST(CPU, instruction_ORA_absolute_x) {
   memory[0x1143] = 0xd4;
   memory[0xcc0d] = 0xf8;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -584,7 +584,7 @@ TEST(CPU, instruction_ASL_absolute_x) {
   memory[0x061f] = 0xf1;
   memory[0x4f7d] = 0x8a;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -620,7 +620,7 @@ TEST(CPU, instruction_JSR_absolute) {
   memory[0x013e] = 0x9b;
   memory[0x8fc2] = 0xc8;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -658,7 +658,7 @@ TEST(CPU, instruction_AND_indirect_x) {
   memory[0x00a7] = 0xd4;
   memory[0xd414] = 0x99;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -694,7 +694,7 @@ TEST(CPU, instruction_BIT_zero_page) {
   memory[0x5f4d] = 0x5b;
   memory[0x003b] = 0x4b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -727,7 +727,7 @@ TEST(CPU, instruction_AND_zero_page) {
   memory[0xf0a4] = 0x5a;
   memory[0x00da] = 0xfc;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -760,7 +760,7 @@ TEST(CPU, instruction_ROL_zero_page) {
   memory[0x566c] = 0x39;
   memory[0x002c] = 0x8b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -794,7 +794,7 @@ TEST(CPU, instruction_PLP_implied) {
   memory[0x01a3] = 0x30;
   memory[0x01a4] = 0x94;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -827,7 +827,7 @@ TEST(CPU, instruction_AND_immediate) {
   memory[0xa4c8] = 0x14;
   memory[0xa4c9] = 0xc3;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -858,7 +858,7 @@ TEST(CPU, instruction_ROL_accumulator) {
   memory[0x525e] = 0xd4;
   memory[0x525f] = 0xc3;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -891,7 +891,7 @@ TEST(CPU, instruction_BIT_absolute) {
   memory[0xd29a] = 0xae;
   memory[0x2fc3] = 0x5d;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -926,7 +926,7 @@ TEST(CPU, instruction_AND_absolute) {
   memory[0x1951] = 0x91;
   memory[0x627c] = 0xf7;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -961,7 +961,7 @@ TEST(CPU, instruction_ROL_absolute) {
   memory[0xca7c] = 0x55;
   memory[0xd3b2] = 0xf3;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -994,7 +994,7 @@ TEST(CPU, instruction_BMI_relative) {
   memory[0x5e14] = 0x1d;
   memory[0x5e15] = 0x68;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1028,7 +1028,7 @@ TEST(CPU, instruction_AND_indirect_y) {
   memory[0x00d4] = 0x09;
   memory[0x09bb] = 0x6d;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1064,7 +1064,7 @@ TEST(CPU, instruction_AND_zero_page_x) {
   memory[0x000c] = 0x38;
   memory[0x00af] = 0xf6;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1099,7 +1099,7 @@ TEST(CPU, instruction_ROL_zero_page_x) {
   memory[0x0013] = 0xd8;
   memory[0x007a] = 0x2d;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1132,7 +1132,7 @@ TEST(CPU, instruction_SEC_implied) {
   memory[0x85d7] = 0x08;
   memory[0x85d8] = 0x67;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1166,7 +1166,7 @@ TEST(CPU, instruction_AND_absolute_y) {
   memory[0xf114] = 0xe5;
   memory[0xe59d] = 0x98;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1202,7 +1202,7 @@ TEST(CPU, instruction_AND_absolute_x) {
   memory[0x00ff] = 0x44;
   memory[0xaaaf] = 0x45;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1237,7 +1237,7 @@ TEST(CPU, instruction_ROL_absolute_x) {
   memory[0x5a9d] = 0xf6;
   memory[0x6c7d] = 0x2b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1275,7 +1275,7 @@ TEST(CPU, instruction_RTI_implied) {
   memory[0x0171] = 0x65;
   memory[0x65aa] = 0x0e;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1315,7 +1315,7 @@ TEST(CPU, instruction_EOR_indirect_x) {
   memory[0x00b4] = 0x56;
   memory[0x56a1] = 0xd3;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1351,7 +1351,7 @@ TEST(CPU, instruction_EOR_zero_page) {
   memory[0xa084] = 0x16;
   memory[0x000e] = 0xc7;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1384,7 +1384,7 @@ TEST(CPU, instruction_LSR_zero_page) {
   memory[0xcce4] = 0xed;
   memory[0x00e3] = 0x85;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1416,7 +1416,7 @@ TEST(CPU, instruction_PHA_implied) {
   memory[0x5064] = 0xe0;
   memory[0x5065] = 0x36;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1448,7 +1448,7 @@ TEST(CPU, instruction_EOR_immediate) {
   memory[0x67c6] = 0x9d;
   memory[0x67c7] = 0x64;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1479,7 +1479,7 @@ TEST(CPU, instruction_LSR_accumulator) {
   memory[0x1281] = 0x10;
   memory[0x1282] = 0x20;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1511,7 +1511,7 @@ TEST(CPU, instruction_JMP_absolute) {
   memory[0x1be8] = 0xce;
   memory[0xcef8] = 0xab;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1545,7 +1545,7 @@ TEST(CPU, instruction_EOR_absolute) {
   memory[0x0b1a] = 0x1f;
   memory[0x0f5d] = 0x69;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1580,7 +1580,7 @@ TEST(CPU, instruction_LSR_absolute) {
   memory[0xa858] = 0xc0;
   memory[0xfd01] = 0x58;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1613,7 +1613,7 @@ TEST(CPU, instruction_BVC_relative) {
   memory[0xaca4] = 0x59;
   memory[0xaca5] = 0xa3;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1648,7 +1648,7 @@ TEST(CPU, instruction_EOR_indirect_y) {
   memory[0x9136] = 0xf9;
   memory[0x9236] = 0x41;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1685,7 +1685,7 @@ TEST(CPU, instruction_EOR_zero_page_x) {
   memory[0x007f] = 0xa8;
   memory[0x0097] = 0x09;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1720,7 +1720,7 @@ TEST(CPU, instruction_LSR_zero_page_x) {
   memory[0x00ad] = 0x73;
   memory[0x000b] = 0xff;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1753,7 +1753,7 @@ TEST(CPU, instruction_CLI_implied) {
   memory[0x448b] = 0x71;
   memory[0x448c] = 0xbb;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1786,7 +1786,7 @@ TEST(CPU, instruction_EOR_absolute_y) {
   memory[0x8fc3] = 0xb9;
   memory[0x084d] = 0xa2;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1822,7 +1822,7 @@ TEST(CPU, instruction_EOR_absolute_x) {
   memory[0xed0d] = 0x79;
   memory[0xd666] = 0x7c;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1859,7 +1859,7 @@ TEST(CPU, instruction_LSR_absolute_x) {
   memory[0x9f34] = 0xf4;
   memory[0xc046] = 0xa8;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1898,7 +1898,7 @@ TEST(CPU, instruction_RTS_implied) {
   memory[0x1ddc] = 0x5d;
   memory[0x1ddd] = 0xda;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1938,7 +1938,7 @@ TEST(CPU, instruction_ADC_indirect_x) {
   memory[0x002a] = 0x72;
   memory[0x723b] = 0x13;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -1974,7 +1974,7 @@ TEST(CPU, instruction_ADC_zero_page) {
   memory[0x0233] = 0x0c;
   memory[0x00cb] = 0xeb;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2007,7 +2007,7 @@ TEST(CPU, instruction_ROR_zero_page) {
   memory[0x8c09] = 0x0c;
   memory[0x005d] = 0x9c;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2041,7 +2041,7 @@ TEST(CPU, instruction_PLA_implied) {
   memory[0x01a4] = 0xe0;
   memory[0x01a5] = 0x36;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2074,7 +2074,7 @@ TEST(CPU, instruction_ADC_immediate) {
   memory[0xbfe0] = 0x1b;
   memory[0xbfe1] = 0x91;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2105,7 +2105,7 @@ TEST(CPU, instruction_ROR_accumulator) {
   memory[0xc7b1] = 0xfc;
   memory[0xc7b2] = 0x0f;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2139,7 +2139,7 @@ TEST(CPU, instruction_JMP_indirect) {
   memory[0xc145] = 0x82;
   memory[0x8216] = 0x64;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2175,7 +2175,7 @@ TEST(CPU, instruction_ADC_absolute) {
   memory[0x6c9b] = 0x71;
   memory[0x2eaa] = 0xe6;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2210,7 +2210,7 @@ TEST(CPU, instruction_ROR_absolute) {
   memory[0x7c76] = 0xb9;
   memory[0xb108] = 0x8b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2243,7 +2243,7 @@ TEST(CPU, instruction_BVS_relative) {
   memory[0x13b5] = 0x5c;
   memory[0x13b6] = 0x05;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2278,7 +2278,7 @@ TEST(CPU, instruction_ADC_indirect_y) {
   memory[0x5179] = 0x46;
   memory[0x5279] = 0x67;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2315,7 +2315,7 @@ TEST(CPU, instruction_ADC_zero_page_x) {
   memory[0x005f] = 0x86;
   memory[0x00fb] = 0xe7;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2350,7 +2350,7 @@ TEST(CPU, instruction_ROR_zero_page_x) {
   memory[0x0067] = 0x44;
   memory[0x00d2] = 0x79;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2383,7 +2383,7 @@ TEST(CPU, instruction_SEI_implied) {
   memory[0x3eb4] = 0xac;
   memory[0x3eb5] = 0x45;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2416,7 +2416,7 @@ TEST(CPU, instruction_ADC_absolute_y) {
   memory[0x73d0] = 0x4a;
   memory[0x34ce] = 0x77;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2451,7 +2451,7 @@ TEST(CPU, instruction_ADC_absolute_x) {
   memory[0x9356] = 0x03;
   memory[0x2fb7] = 0x48;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2486,7 +2486,7 @@ TEST(CPU, instruction_ROR_absolute_x) {
   memory[0x8ab2] = 0x53;
   memory[0xa29c] = 0x7f;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2522,7 +2522,7 @@ TEST(CPU, instruction_STA_indirect_x) {
   memory[0x000e] = 0x64;
   memory[0x000f] = 0x4c;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2557,7 +2557,7 @@ TEST(CPU, instruction_STY_zero_page) {
   memory[0xa08d] = 0x8f;
   memory[0xa08e] = 0xad;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2589,7 +2589,7 @@ TEST(CPU, instruction_STA_zero_page) {
   memory[0x7f81] = 0x64;
   memory[0x7f82] = 0x87;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2621,7 +2621,7 @@ TEST(CPU, instruction_STX_zero_page) {
   memory[0x487a] = 0x93;
   memory[0x487b] = 0x8d;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2653,7 +2653,7 @@ TEST(CPU, instruction_DEY_implied) {
   memory[0x287d] = 0x1b;
   memory[0x287e] = 0x40;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2684,7 +2684,7 @@ TEST(CPU, instruction_TXA_implied) {
   memory[0x34ea] = 0xfb;
   memory[0x34eb] = 0x59;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2716,7 +2716,7 @@ TEST(CPU, instruction_STY_absolute) {
   memory[0x84ac] = 0x13;
   memory[0x84ad] = 0x0a;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2750,7 +2750,7 @@ TEST(CPU, instruction_STA_absolute) {
   memory[0x376e] = 0x22;
   memory[0x376f] = 0xe6;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2784,7 +2784,7 @@ TEST(CPU, instruction_STX_absolute) {
   memory[0x100b] = 0xc0;
   memory[0x100c] = 0x5c;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2818,7 +2818,7 @@ TEST(CPU, instruction_BCC_relative) {
   memory[0xec82] = 0x7a;
   memory[0xec48] = 0xd6;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2853,7 +2853,7 @@ TEST(CPU, instruction_STA_indirect_y) {
   memory[0x00bc] = 0x59;
   memory[0x59a9] = 0xd5;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2888,7 +2888,7 @@ TEST(CPU, instruction_STY_zero_page_x) {
   memory[0xaedb] = 0x63;
   memory[0x008e] = 0x82;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2922,7 +2922,7 @@ TEST(CPU, instruction_STA_zero_page_x) {
   memory[0x0bf4] = 0x90;
   memory[0x00ac] = 0x3c;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2956,7 +2956,7 @@ TEST(CPU, instruction_STX_zero_page_y) {
   memory[0xfb9e] = 0xd3;
   memory[0x00d2] = 0xe7;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -2989,7 +2989,7 @@ TEST(CPU, instruction_TYA_implied) {
   memory[0xaefc] = 0xdd;
   memory[0xaefd] = 0x23;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3022,7 +3022,7 @@ TEST(CPU, instruction_STA_absolute_y) {
   memory[0x0fb2] = 0xf6;
   memory[0x7b84] = 0x1f;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3055,7 +3055,7 @@ TEST(CPU, instruction_TXS_implied) {
   memory[0x18d6] = 0x0b;
   memory[0x18d7] = 0xd0;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3088,7 +3088,7 @@ TEST(CPU, instruction_STA_absolute_x) {
   memory[0xad9a] = 0x77;
   memory[0x787b] = 0x87;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3122,7 +3122,7 @@ TEST(CPU, instruction_LDY_immediate) {
   memory[0x70be] = 0xc9;
   memory[0x70bf] = 0xc1;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3157,7 +3157,7 @@ TEST(CPU, instruction_LDA_indirect_x) {
   memory[0x003f] = 0x5b;
   memory[0x5b18] = 0x45;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3192,7 +3192,7 @@ TEST(CPU, instruction_LDX_immediate) {
   memory[0xb02c] = 0x72;
   memory[0xb02d] = 0x42;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3224,7 +3224,7 @@ TEST(CPU, instruction_LDY_zero_page) {
   memory[0xfeae] = 0x1c;
   memory[0x008a] = 0x5a;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3257,7 +3257,7 @@ TEST(CPU, instruction_LDA_zero_page) {
   memory[0x8ba0] = 0x39;
   memory[0x0035] = 0x7e;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3290,7 +3290,7 @@ TEST(CPU, instruction_LDX_zero_page) {
   memory[0xca1c] = 0xfd;
   memory[0x0085] = 0x52;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3322,7 +3322,7 @@ TEST(CPU, instruction_TAY_implied) {
   memory[0x2ca0] = 0x07;
   memory[0x2ca1] = 0x46;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3353,7 +3353,7 @@ TEST(CPU, instruction_LDA_immediate) {
   memory[0xb36b] = 0xcc;
   memory[0xb36c] = 0x21;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3384,7 +3384,7 @@ TEST(CPU, instruction_TAX_implied) {
   memory[0x5aa2] = 0x4f;
   memory[0x5aa3] = 0xba;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3417,7 +3417,7 @@ TEST(CPU, instruction_LDY_absolute) {
   memory[0xddfd] = 0x09;
   memory[0x420b] = 0x0c;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3452,7 +3452,7 @@ TEST(CPU, instruction_LDA_absolute) {
   memory[0xaf5e] = 0x67;
   memory[0x7a25] = 0x84;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3487,7 +3487,7 @@ TEST(CPU, instruction_LDX_absolute) {
   memory[0x3364] = 0x22;
   memory[0xd814] = 0xdb;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3520,7 +3520,7 @@ TEST(CPU, instruction_BCS_relative) {
   memory[0x3a26] = 0x79;
   memory[0x3a27] = 0xe0;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3554,7 +3554,7 @@ TEST(CPU, instruction_LDA_indirect_y) {
   memory[0x0091] = 0x06;
   memory[0x06ef] = 0x99;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3590,7 +3590,7 @@ TEST(CPU, instruction_LDY_zero_page_x) {
   memory[0x00e9] = 0xf5;
   memory[0x004f] = 0x06;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3625,7 +3625,7 @@ TEST(CPU, instruction_LDA_zero_page_x) {
   memory[0x0020] = 0xd5;
   memory[0x007c] = 0x2a;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3660,7 +3660,7 @@ TEST(CPU, instruction_LDX_zero_page_y) {
   memory[0x0039] = 0xc2;
   memory[0x00b6] = 0x66;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3693,7 +3693,7 @@ TEST(CPU, instruction_CLV_implied) {
   memory[0xdfdf] = 0x87;
   memory[0xdfe0] = 0x22;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3726,7 +3726,7 @@ TEST(CPU, instruction_LDA_absolute_y) {
   memory[0xadfc] = 0xb8;
   memory[0xaaae] = 0x7b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3759,7 +3759,7 @@ TEST(CPU, instruction_TSX_implied) {
   memory[0xe060] = 0xd6;
   memory[0xe061] = 0x5b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3793,7 +3793,7 @@ TEST(CPU, instruction_LDY_absolute_x) {
   memory[0xdec7] = 0xd5;
   memory[0x85ba] = 0x05;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3830,7 +3830,7 @@ TEST(CPU, instruction_LDA_absolute_x) {
   memory[0x0242] = 0x10;
   memory[0x3afe] = 0xa3;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3866,7 +3866,7 @@ TEST(CPU, instruction_LDX_absolute_y) {
   memory[0xd6da] = 0x7b;
   memory[0x5941] = 0x32;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3899,7 +3899,7 @@ TEST(CPU, instruction_CPY_immediate) {
   memory[0x9414] = 0x59;
   memory[0x9415] = 0xe4;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3934,7 +3934,7 @@ TEST(CPU, instruction_CMP_indirect_x) {
   memory[0x00a5] = 0x61;
   memory[0x6136] = 0x4a;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -3970,7 +3970,7 @@ TEST(CPU, instruction_CPY_zero_page) {
   memory[0x22c1] = 0xd7;
   memory[0x0074] = 0xd9;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4003,7 +4003,7 @@ TEST(CPU, instruction_CMP_zero_page) {
   memory[0xa69a] = 0x73;
   memory[0x0087] = 0x86;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4036,7 +4036,7 @@ TEST(CPU, instruction_DEC_zero_page) {
   memory[0x034c] = 0xee;
   memory[0x004b] = 0xf7;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4068,7 +4068,7 @@ TEST(CPU, instruction_INY_implied) {
   memory[0x0918] = 0x45;
   memory[0x0919] = 0x64;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4099,7 +4099,7 @@ TEST(CPU, instruction_CMP_immediate) {
   memory[0x5b8d] = 0xbb;
   memory[0x5b8e] = 0xbf;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4130,7 +4130,7 @@ TEST(CPU, instruction_DEX_implied) {
   memory[0x7b90] = 0x62;
   memory[0x7b91] = 0x35;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4163,7 +4163,7 @@ TEST(CPU, instruction_CPY_absolute) {
   memory[0x2cb3] = 0xe9;
   memory[0xcd4b] = 0x01;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4198,7 +4198,7 @@ TEST(CPU, instruction_CMP_absolute) {
   memory[0x260a] = 0x35;
   memory[0xdf0e] = 0x26;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4233,7 +4233,7 @@ TEST(CPU, instruction_DEC_absolute) {
   memory[0x9d67] = 0x18;
   memory[0xc7ec] = 0xe4;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4268,7 +4268,7 @@ TEST(CPU, instruction_BNE_relative) {
   memory[0x4009] = 0xc1;
   memory[0x4109] = 0x62;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4304,7 +4304,7 @@ TEST(CPU, instruction_CMP_indirect_y) {
   memory[0x0015] = 0x4b;
   memory[0x4bed] = 0xae;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4340,7 +4340,7 @@ TEST(CPU, instruction_CMP_zero_page_x) {
   memory[0x0027] = 0x26;
   memory[0x00e4] = 0xa1;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4375,7 +4375,7 @@ TEST(CPU, instruction_DEC_zero_page_x) {
   memory[0x00be] = 0x1f;
   memory[0x00e6] = 0xb9;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4408,7 +4408,7 @@ TEST(CPU, instruction_CLD_implied) {
   memory[0x240d] = 0x80;
   memory[0x240e] = 0x34;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4441,7 +4441,7 @@ TEST(CPU, instruction_CMP_absolute_y) {
   memory[0x3bf2] = 0xfd;
   memory[0x1651] = 0x09;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4477,7 +4477,7 @@ TEST(CPU, instruction_CMP_absolute_x) {
   memory[0x930d] = 0xac;
   memory[0x1fc5] = 0x53;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4513,7 +4513,7 @@ TEST(CPU, instruction_DEC_absolute_x) {
   memory[0x7499] = 0xbe;
   memory[0xf290] = 0x5c;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4546,7 +4546,7 @@ TEST(CPU, instruction_CPX_immediate) {
   memory[0x2ec2] = 0x1c;
   memory[0x2ec3] = 0xac;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4581,7 +4581,7 @@ TEST(CPU, instruction_SBC_indirect_x) {
   memory[0x00c2] = 0xcd;
   memory[0xcd6e] = 0x73;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4617,7 +4617,7 @@ TEST(CPU, instruction_CPX_zero_page) {
   memory[0x4f7d] = 0xa1;
   memory[0x00b8] = 0x0b;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4650,7 +4650,7 @@ TEST(CPU, instruction_SBC_zero_page) {
   memory[0x22ff] = 0x1e;
   memory[0x00fa] = 0x00;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4683,7 +4683,7 @@ TEST(CPU, instruction_INC_zero_page) {
   memory[0xa3c1] = 0x2d;
   memory[0x00e4] = 0xc9;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4715,7 +4715,7 @@ TEST(CPU, instruction_INX_implied) {
   memory[0x5cb7] = 0xfc;
   memory[0x5cb8] = 0xd3;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4746,7 +4746,7 @@ TEST(CPU, instruction_SBC_immediate) {
   memory[0x0085] = 0xc4;
   memory[0x0086] = 0x08;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4779,7 +4779,7 @@ TEST(CPU, instruction_CPX_absolute) {
   memory[0x9d54] = 0xef;
   memory[0x9bb7] = 0xbd;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4814,7 +4814,7 @@ TEST(CPU, instruction_SBC_absolute) {
   memory[0x4fee] = 0xf9;
   memory[0x5f09] = 0xa0;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4849,7 +4849,7 @@ TEST(CPU, instruction_INC_absolute) {
   memory[0x748f] = 0x9a;
   memory[0xa3cf] = 0x44;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4882,7 +4882,7 @@ TEST(CPU, instruction_BEQ_relative) {
   memory[0xe3c9] = 0x34;
   memory[0xe3ca] = 0x4e;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4917,7 +4917,7 @@ TEST(CPU, instruction_SBC_indirect_y) {
   memory[0x15be] = 0x24;
   memory[0x16be] = 0xe5;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4954,7 +4954,7 @@ TEST(CPU, instruction_SBC_zero_page_x) {
   memory[0x00dd] = 0xe6;
   memory[0x0049] = 0x25;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -4989,7 +4989,7 @@ TEST(CPU, instruction_INC_zero_page_x) {
   memory[0x006e] = 0xb9;
   memory[0x008f] = 0x33;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -5022,7 +5022,7 @@ TEST(CPU, instruction_SED_implied) {
   memory[0x386d] = 0x87;
   memory[0x386e] = 0x7a;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -5056,7 +5056,7 @@ TEST(CPU, instruction_SBC_absolute_y) {
   memory[0x773f] = 0xbc;
   memory[0x1918] = 0x09;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -5093,7 +5093,7 @@ TEST(CPU, instruction_SBC_absolute_x) {
   memory[0x95aa] = 0x6e;
   memory[0xd5d5] = 0x3e;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 
@@ -5129,7 +5129,7 @@ TEST(CPU, instruction_INC_absolute_x) {
   memory[0xffa1] = 0x13;
   memory[0x7db4] = 0xe5;
 
-  Bus::Bus bus{memory};
+  Bus::FakeBus bus{memory};
 
   CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
 

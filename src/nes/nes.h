@@ -67,23 +67,6 @@ public:
     ppu.init();
   }
 
-  void load_rom(const std::array<std::uint8_t, 0xFFFF> &data) {
-    // Load data into memory
-    std::copy(data.begin(), data.end(), memory.begin());
-    std::cout << "Loaded memory" << std::endl;
-  }
-
-  void load_rom(const std::string &rom_path) {
-    // Load ROM into memory
-    std::ifstream rom_file(rom_path, std::ios::binary);
-    if (!rom_file) {
-      throw std::runtime_error("Failed to open ROM file");
-    }
-    rom_file.read(reinterpret_cast<char *>(memory.data()), memory.size());
-    std::cout << "Loaded ROM: " << rom_path << std::endl;
-    std::cout << "Memory size: " << memory.size() << std::endl;
-  }
-
 private:
   CPU::CPU cpu;
   APU::APU apu;

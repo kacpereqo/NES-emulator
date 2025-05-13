@@ -30,7 +30,7 @@ void CPU::CPU::INY() {
 
 // Decrement Memory
 void CPU::CPU::DEC() {
-  const std::uint8_t value = this->bus.cpu_read(this->temp_address - 1);
+  const std::uint8_t value = this->bus.cpu_read(this->temp_address);
   this->bus.cpu_write(this->temp_address, value - 1);
 
   this->set_processor_status_flag(ProcessorStatus::Zero, value == 0);
