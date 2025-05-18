@@ -274,8 +274,8 @@ void CPU::CPU::run() {
       {INC, addressing_absolute_x, 7},
       {XXX, addressing_implied, 7},
   }};
-  std::cout << "PC:" << std::hex << static_cast<int>(PC)
-            << " Opcode:" << std::hex << static_cast<int>(opcode) << std::endl;
+  // std::cout << "PC:" << std::hex << static_cast<int>(PC)
+            // << " Opcode:" << std::hex << static_cast<int>(opcode) << std::endl;
 
   const Instruction instruction = instruction_set[opcode];
 

@@ -23,6 +23,8 @@ static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
 
 class CPU {
 public:
+    void set_pc(const std::uint16_t pc) { PC = pc; }
+
   struct Instruction {
     using InstructionHandler = void (CPU::*)();
     using AddressingModeHandler = void (CPU::*)();

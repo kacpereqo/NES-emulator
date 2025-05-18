@@ -29,6 +29,16 @@ public:
 
 class FakeBus final : public AbstractBus {
 public:
+
+  explicit FakeBus(std::vector<std::uint8_t> &data, const std::uint16_t start_address) {
+    std::copy(data.begin(), data.end() , memory.begin() + start_address);
+    std::cout << "FakeBus: " << std::hex << start_address << std::endl;
+  }
+
+  explicit FakeBus(std::vector<std::uint8_t> &data) {
+    std::copy(data.begin(), data.end(), memory.begin());
+  }
+
   explicit FakeBus(std::array<std::uint8_t, 0xFFFF + 1> &data) {
     std::copy(data.begin(), data.end(), memory.begin());
   }
@@ -36,6 +46,7 @@ public:
   std::uint8_t cpu_read(const std::uint16_t address) override {
     return memory[address];
   }
+
   void cpu_write(const std::uint16_t address,
                  const std::uint8_t data) override {
     memory[address] = data;
@@ -56,11 +67,13 @@ public:
 
   std::uint8_t cpu_read(const std::uint16_t address) override {
 
-    if (address < 0x2000) {
+    // ram
+    if (in_range(address, 0x0000, 0x1FFF)) {
       return ram[address % 0x0800];
     }
 
-    if (address >= 0x8000) {
+    // rom
+    else if (in_range(address, 0x8000, 0xFFFF)) {
       return rom[address - 0x8000];
     }
 
@@ -75,6 +88,11 @@ public:
   }
 
 private:
+  static bool in_range(const std::uint16_t address, const std::uint16_t start, const std::uint16_t end)
+  {
+    return address  >= start && address <= end;
+  }
+
   std::array<std::uint8_t, 0x800> ram{};
   std::array<std::uint8_t, 0x8000> rom{};
 };
