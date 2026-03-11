@@ -13,12 +13,18 @@
 
 namespace CPU {
 
-static constexpr std::uint8_t STACK_START{0xFD}; // Stack starts at 0x0100
-static constexpr std::uint16_t PROGRAM_COUNTER{
-    0xFFFC}; // Program Counter starts at 0x8000
-static constexpr std::uint8_t DEFAULT_STATUS{ProcessorStatus::Unused |
+namespace ResetState {
+static constexpr std::uint8_t SP{0xFD}; // Stack starts at 0x0100
+static constexpr std::uint16_t PC{0xFFFC}; // Program Counter starts at 0x8000
+static constexpr std::uint8_t P{ProcessorStatus::Unused |
                                              ProcessorStatus::InterruptDisable |
                                              ProcessorStatus::DecimalMode};
+static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
+static constexpr std::uint8_t A{0};
+static constexpr std::uint8_t X{0};
+static constexpr std::uint8_t Y{0};
+}
+
 static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
 
 class CPU {
@@ -36,8 +42,8 @@ public:
   /// Constructor
 
   explicit CPU(Bus::AbstractBus &bus)
-      : bus{bus}, PC{PROGRAM_COUNTER}, SP{STACK_START}, A{0}, X{0}, Y{0},
-        P{DEFAULT_STATUS} {}
+      : bus{bus}, PC{ResetState::PC}, SP{ResetState::SP}, A{ResetState::A}, X{ResetState::X}, Y{ResetState::Y},
+        P{ResetState::P} {}
 
   CPU(Bus::AbstractBus &bus, const std::uint16_t PC, const std::uint8_t SP,
       const std::uint8_t A, const std::uint8_t X, const std::uint8_t Y,

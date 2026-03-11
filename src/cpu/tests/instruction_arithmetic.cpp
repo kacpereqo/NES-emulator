@@ -7,12 +7,12 @@ TEST(CPU, initial_state) {
   const CPU::CPU cpu{bus};
 
   // Test the initial state of the CPU
-  EXPECT_EQ(cpu.get_PC(), CPU::PROGRAM_COUNTER);
-  EXPECT_EQ(cpu.get_SP(), CPU::STACK_START);
-  EXPECT_EQ(cpu.get_A(), 0);
-  EXPECT_EQ(cpu.get_X(), 0);
-  EXPECT_EQ(cpu.get_Y(), 0);
-  EXPECT_EQ(cpu.get_P(), CPU::DEFAULT_STATUS);
+  EXPECT_EQ(cpu.get_PC(), CPU::ResetState::PC);
+  EXPECT_EQ(cpu.get_SP(), CPU::ResetState::SP);
+  EXPECT_EQ(cpu.get_A(), CPU::ResetState::A);
+  EXPECT_EQ(cpu.get_X(), CPU::ResetState::X);
+  EXPECT_EQ(cpu.get_Y(), CPU::ResetState::Y);
+  EXPECT_EQ(cpu.get_P(), CPU::ResetState::P);
 }
 
 TEST(CPU, instruction_BRK_implied) {

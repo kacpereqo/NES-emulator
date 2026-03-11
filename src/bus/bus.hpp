@@ -7,6 +7,7 @@
 
 #include <array>
 #include <vector>
+#include "../ppu/enums.hpp"
 
 namespace Bus {
 
@@ -69,11 +70,14 @@ public:
 
     // ram
     if (in_range(address, 0x0000, 0x1FFF)) {
+      if (address == PPU::Registers::STATUS) {
+      }
+
       return ram[address % 0x0800];
     }
 
     // rom
-    else if (in_range(address, 0x8000, 0xFFFF)) {
+    if (in_range(address, 0x8000, 0xFFFF)) {
       return rom[address - 0x8000];
     }
 
@@ -83,8 +87,23 @@ public:
   void cpu_write(const std::uint16_t address,
                  const std::uint8_t data) override {
     if (address >= 0x2000) {
+
+      if (address == PPU::Registers::SCROLL || address == PPU::Registers::VRAM_ADDRESS)
+        ppu_latch = true;
+
       ram[address % 0x0800] = data;
     }
+  }
+
+  std::uint8_t& ppu_get_register(const std::uint16_t address) {
+    if (in_range(address, 0x2000, 0x2007)) {
+      return ram[address % 8];
+    }
+    throw std::out_of_range("PPU register address out of range");
+  }
+
+  bool ppu_get_latch_status() const {
+    return ppu_latch;
   }
 
 private:
@@ -92,6 +111,9 @@ private:
   {
     return address  >= start && address <= end;
   }
+
+  bool ppu_latch{false};
+
 
   std::array<std::uint8_t, 0x800> ram{};
   std::array<std::uint8_t, 0x8000> rom{};

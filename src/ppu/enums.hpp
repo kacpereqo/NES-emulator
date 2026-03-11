@@ -9,6 +9,22 @@
 
 namespace PPU {
 
+constexpr std::uint16_t VRAM_SIZE{0x800};     // 2KB of VRAM
+constexpr std::uint16_t OAM_SIZE{0x100};      // 256 bytes of OAM
+constexpr std::uint16_t CHR_ROM_SIZE{0x2000}; // 8KB of CHR ROM
+
+namespace Registers {
+constexpr std::uint16_t CONTROLLER{0x2000};
+constexpr std::uint16_t MASK{0x2001};
+constexpr std::uint16_t STATUS{0x2002};
+constexpr std::uint16_t OAM{0x2003};
+constexpr std::uint16_t OAM_DATA{0x2004};
+constexpr std::uint16_t SCROLL{0x2005};
+constexpr std::uint16_t VRAM_ADDRESS{0x2006};
+constexpr std::uint16_t VRAM_DATA{0x2007};
+constexpr std::uint16_t OAM_DMA{0x4014};
+} // namespace Registers
+
 /// PPUCTRL
 // 7  bit  0
 // ---- ----
@@ -40,7 +56,7 @@ enum Controller : std::uint8_t {
 
 }
 
-} // namespace Controller
+} // namespace PPU
 
 /// PPUMASK
 namespace Mask {
@@ -67,6 +83,6 @@ enum Status : std::uint8_t {
   // Lower 5 bits are unused
 };
 }
- // namespace PPU
+// namespace PPU
 
 #endif // ENUMS_HPP
