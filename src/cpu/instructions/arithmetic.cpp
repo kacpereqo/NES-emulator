@@ -3,6 +3,7 @@
 //
 
 #include "../cpu.h"
+#include <cassert>
 
 std::int16_t to_twos_complement(std::int16_t value) {
   if (value & 0x8000) {
@@ -13,68 +14,26 @@ std::int16_t to_twos_complement(std::int16_t value) {
 
 // Add with Carry
 void CPU::CPU::ADC() {
+  if (this->get_processor_status_flag(ProcessorStatus::DecimalMode)) return;
 
-  if (this->get_processor_status_flag(ProcessorStatus::DecimalMode)) {
-    std::cout << "Decimal mode not implemented" << std::endl;
-    // TODO:
-    // refactor
+  // 1. Calculate the 16-bit result
+  const std::uint16_t result =
+      this->A + this->temp_value +
+      this->get_processor_status_flag(ProcessorStatus::Carry);
 
-    const uint8_t carry_in =
-        this->get_processor_status_flag(ProcessorStatus::Carry);
-    const uint8_t a = this->A;
-    const uint8_t value = this->temp_value;
+  bool overflow = ((this->A ^ result) & (this->temp_value ^ result) & 0x80) != 0;
 
-    uint8_t low_nibble_sum = (a & 0x0F) + (value & 0x0F) + carry_in;
+  this->A = result & 0xFF;
 
-    const std::int16_t temp_sum =
-        to_twos_complement(a >> 4) + to_twos_complement(value >> 4);
-
-    std::cout << std::hex << "A: " << static_cast<int>(a)
-              << " value: " << static_cast<int>(value) << std::endl;
-
-    uint8_t high_nibble_sum = (a >> 4) + (value >> 4);
-
-    if (low_nibble_sum > 9) {
-      low_nibble_sum += 6;
-      high_nibble_sum++;
-    }
-
-    if (high_nibble_sum > 9) {
-      high_nibble_sum += 6;
-    }
-
-    uint8_t result = (high_nibble_sum << 4) | (low_nibble_sum & 0x0F);
-    this->A = result & 0xFF;
-
-    this->set_processor_status_flag(ProcessorStatus::Carry,
-                                    high_nibble_sum > 0x0F);
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative,
-                                    (this->A & 0x10));
-    this->set_processor_status_flag(ProcessorStatus::Overflow,
-                                    temp_sum >= -8 && temp_sum <= 7);
-
-  } else {
-    const std::uint16_t result =
-        this->A + this->temp_value +
-        this->get_processor_status_flag(ProcessorStatus::Carry);
-    this->A = result & 0xFF;
-
-    this->set_processor_status_flag(ProcessorStatus::Carry, result > 0xFF);
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(
-        ProcessorStatus::Overflow,
-        ((result ^ this->A) & (result ^ this->temp_value) & 0x80) != 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
-  }
+  this->set_processor_status_flag(ProcessorStatus::Carry, result > 0xFF);
+  this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
+  this->set_processor_status_flag(ProcessorStatus::Overflow, overflow);
+  this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
 }
 
 // Subtract with Carry
 void CPU::CPU::SBC() {
-  // TODO:
-  // implement decimal mode
-  if (this->get_processor_status_flag(ProcessorStatus::DecimalMode))
-    std::cout << "Decimal mode not implemented" << std::endl;
+  if (this->get_processor_status_flag(ProcessorStatus::DecimalMode)) return;
 
   // A = A - memory - ~C
   const std::uint8_t temp_A = this->A;
