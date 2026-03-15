@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME}
         src/cpu/instructions/system.cpp
         src/cpu/utils.cpp
         src/nes/nes.h
-        src/ppu/ppu.h
+        src/ppu/ppu.hpp
         src/apu/apu.h
         src/cpu/cpu.cpp
         main.cpp
@@ -31,6 +31,11 @@ add_executable(${PROJECT_NAME}
         src/bus/bus.hpp
         src/bus/bus.hpp
         src/cpu/enum.hpp
+        src/bus/bus.cpp
+        src/bus/fake_bus.cpp
+        src/bus/fake_bus.hpp
+        src/bus/abstract_bus.hpp
+        src/ppu/ppu.cpp
 )
 enable_testing()
 
@@ -51,7 +56,7 @@ add_executable(${PROJECT_NAME}-TESTS
         src/cpu/instructions/system.cpp
         src/cpu/utils.cpp
         src/nes/nes.h
-        src/ppu/ppu.h
+        src/ppu/ppu.hpp
         src/apu/apu.h
         src/cpu/cpu.cpp
         src/cpu/tests/instruction_arithmetic.cpp

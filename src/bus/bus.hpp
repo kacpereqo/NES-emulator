@@ -1,123 +1,34 @@
-//
-// Created by remza on 04.05.2025.
-//
-
-#ifndef BUS_HPP
-#define BUS_HPP
+#pragma once
 
 #include <array>
-#include <vector>
-#include "../ppu/enums.hpp"
+#include <cstdint>
+#include "abstract_bus.hpp"
+
+namespace PPU {
+  class PPU;
+}
 
 namespace Bus {
 
-struct MemoryRegion {
-  std::uint16_t start;
-  std::uint16_t size;
-};
+  class Bus final : public AbstractBus {
+  public:
+    Bus() = delete;
+    Bus(std::array<std::uint8_t, 0x10000>& data, PPU::PPU& ppu);
 
-constexpr MemoryRegion RAM{0x0000, 0x0800};
-constexpr MemoryRegion ROM{0x8000, 0x8000};
+    std::uint8_t cpu_read(std::uint16_t address) override;
+    void cpu_write(std::uint16_t address, std::uint8_t data) override;
 
-class AbstractBus {
-public:
-  virtual ~AbstractBus() = default;
-  AbstractBus() = default;
+    std::uint8_t& ppu_get_register(std::uint16_t address);
 
-  virtual std::uint8_t cpu_read(std::uint16_t address) = 0;
-  virtual void cpu_write(std::uint16_t address, std::uint8_t data) = 0;
-};
+  private:
+    static bool in_range(std::uint16_t address,
+                         std::uint16_t start,
+                         std::uint16_t end);
 
-class FakeBus final : public AbstractBus {
-public:
+    PPU::PPU& ppu;
 
-  explicit FakeBus(std::vector<std::uint8_t> &data, const std::uint16_t start_address) {
-    std::copy(data.begin(), data.end() , memory.begin() + start_address);
-    std::cout << "FakeBus: " << std::hex << start_address << std::endl;
-  }
+    std::array<std::uint8_t, 0x800> ram{};
+    std::array<std::uint8_t, 0x8000> rom{};
+  };
 
-  explicit FakeBus(std::vector<std::uint8_t> &data) {
-    std::copy(data.begin(), data.end(), memory.begin());
-  }
-
-  explicit FakeBus(std::array<std::uint8_t, 0xFFFF + 1> &data) {
-    std::copy(data.begin(), data.end(), memory.begin());
-  }
-
-  std::uint8_t cpu_read(const std::uint16_t address) override {
-    return memory[address];
-  }
-
-  void cpu_write(const std::uint16_t address,
-                 const std::uint8_t data) override {
-    memory[address] = data;
-  }
-
-private:
-  std::array<std::uint8_t, 0xFFFF> memory{};
-};
-
-class Bus final : public AbstractBus {
-public:
-  Bus() = default;
-
-  explicit Bus(std::array<std::uint8_t, 0xFFFF> &data) {
-    std::copy(data.begin() + 0x0000, data.begin() + 0x0800, ram.begin());
-    std::copy(data.begin() + 0x8000, data.begin() + 0xFFFF, rom.begin());
-  }
-
-  std::uint8_t cpu_read(const std::uint16_t address) override {
-
-    // ram
-    if (in_range(address, 0x0000, 0x1FFF)) {
-      if (address == PPU::Registers::STATUS) {
-      }
-
-      return ram[address % 0x0800];
-    }
-
-    // rom
-    if (in_range(address, 0x8000, 0xFFFF)) {
-      return rom[address - 0x8000];
-    }
-
-    return 0xFF;
-  }
-
-  void cpu_write(const std::uint16_t address,
-                 const std::uint8_t data) override {
-    if (address >= 0x2000) {
-
-      if (address == PPU::Registers::SCROLL || address == PPU::Registers::VRAM_ADDRESS)
-        ppu_latch = true;
-
-      ram[address % 0x0800] = data;
-    }
-  }
-
-  std::uint8_t& ppu_get_register(const std::uint16_t address) {
-    if (in_range(address, 0x2000, 0x2007)) {
-      return ram[address % 8];
-    }
-    throw std::out_of_range("PPU register address out of range");
-  }
-
-  bool ppu_get_latch_status() const {
-    return ppu_latch;
-  }
-
-private:
-  static bool in_range(const std::uint16_t address, const std::uint16_t start, const std::uint16_t end)
-  {
-    return address  >= start && address <= end;
-  }
-
-  bool ppu_latch{false};
-
-
-  std::array<std::uint8_t, 0x800> ram{};
-  std::array<std::uint8_t, 0x8000> rom{};
-};
-} // namespace Bus
-
-#endif // BUS_HPP
+}

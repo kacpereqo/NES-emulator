@@ -15,7 +15,7 @@
 #include "../apu/apu.h"
 #include "../bus/bus.hpp"
 #include "../cpu/cpu.h"
-#include "../ppu/ppu.h"
+#include "../ppu/ppu.hpp"
 
 /// https://www.nesdev.org/wiki/CPU_memory_map
 // Address range 	Size 	Device
