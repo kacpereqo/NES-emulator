@@ -36,6 +36,7 @@ add_executable(${PROJECT_NAME}
         src/bus/fake_bus.hpp
         src/bus/abstract_bus.hpp
         src/ppu/ppu.cpp
+        src/cpu/instruction_list.hpp
 )
 enable_testing()
 

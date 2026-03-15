@@ -9,7 +9,7 @@ class NES {
   Bus::Bus bus;
   PPU::PPU ppu;
 
-  NES(std::array<std::uint8_t, 0x10000> data) : cpu(bus), bus(data, ppu), ppu(bus) {}
+  explicit NES(std::array<std::uint8_t, 0x10000> data) : cpu(bus), bus(data, ppu), ppu(bus, cpu) {}
 };
 
 int main(int argc, char* argv[]) {

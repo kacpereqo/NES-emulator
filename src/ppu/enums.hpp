@@ -9,7 +9,7 @@
 
 namespace PPU {
   constexpr std::uint16_t VRAM_SIZE{0x800}; // 2KB of VRAM
-  constexpr std::uint16_t OAM_SIZE{0x100}; // 256 bytes of OAM
+  constexpr std::uint16_t   OAM_SIZE{0x100}; // 256 bytes of OAM
   constexpr std::uint16_t CHR_ROM_SIZE{0x2000}; // 8KB of CHR ROM
 
   namespace Registers {

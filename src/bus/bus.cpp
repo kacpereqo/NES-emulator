@@ -27,15 +27,16 @@ namespace Bus {
 
     void Bus::cpu_write(const std::uint16_t address, const std::uint8_t data) {
         if (address >= 0x2000) {
+            ram[address % 0x0800] = data;
+
             if (address == PPU::Registers::SCROLL ||
                 address == PPU::Registers::VRAM_ADDRESS)
                 ppu.latch_set();
 
-            ram[address % 0x0800] = data;
         }
     }
 
-    std::uint8_t &Bus::ppu_get_register(std::uint16_t address) {
+    std::uint8_t &Bus::ppu_get_register(const std::uint16_t address) {
         if (in_range(address, 0x2000, 0x2007))
             return ram[address % 8];
 
