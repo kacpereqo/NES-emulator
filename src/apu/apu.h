@@ -19,51 +19,51 @@
 // status $4017 	    All 	    Frame counter
 
 namespace APU {
-constexpr std::uint8_t CHANNEL_COUNT{5};
+    constexpr std::uint8_t CHANNEL_COUNT{5};
 
-namespace Status {
-enum Status : std::uint8_t {
-  Pulse1 = 1 << 0,
-  Pulse2 = 1 << 1,
-  Triangle = 1 << 2,
-  Noise = 1 << 3,
-  DMC = 1 << 4,
-};
+    namespace Status {
+        enum Status : std::uint8_t {
+            Pulse1 = 1 << 0,
+            Pulse2 = 1 << 1,
+            Triangle = 1 << 2,
+            Noise = 1 << 3,
+            DMC = 1 << 4,
+        };
+    }
 
-}
+    namespace FrameCounter {
+        enum FrameCounter : std::uint8_t {
+            IRQ = 1 << 6,
+            Mode = 1 << 7,
+        };
+    }
 
-namespace FrameCounter {
-enum FrameCounter : std::uint8_t {
-  IRQ = 1 << 6,
-  Mode = 1 << 7,
-};
-}
+    class APU {
+    public:
+        explicit APU(std::array<std::uint8_t, 0xFFFF> &memory) : memory{memory} {
+            this->init();
+        }
 
-class APU {
-public:
-  explicit APU(std::array<std::uint8_t, 0xFFFF> &memory) : memory{memory} {
-    this->init();
-  }
+        void init() {
+        }
 
-  void init() {
+        void run() {
+        }
 
-  }
+    private:
+        std::uint8_t generate_pulse_1();
 
-  void run() {
+        std::uint8_t generate_pulse_2();
 
-  }
+        std::uint8_t generate_triangle();
 
-private:
+        std::uint8_t generate_noise();
 
-  std::uint8_t generate_pulse_1();
-  std::uint8_t generate_pulse_2();
-  std::uint8_t generate_triangle();
-  std::uint8_t generate_noise();
-  std::uint8_t generate_dmc();
+        std::uint8_t generate_dmc();
 
-  std::array<std::uint8_t, CHANNEL_COUNT> channels;
-  std::array<std::uint8_t, 0xFFFF> &memory;
-};
+        std::array<std::uint8_t, CHANNEL_COUNT> channels;
+        std::array<std::uint8_t, 0xFFFF> &memory;
+    };
 } // namespace APU
 
 #endif // APU_H

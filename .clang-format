@@ -1,0 +1,79 @@
+# Embedded-friendly clang-format config based on LLVM
+Language: Cpp
+BasedOnStyle: LLVM
+
+# Indentation & spacing
+IndentWidth: 4
+ContinuationIndentWidth: 2
+TabWidth: 4
+UseTab: ForIndentation
+NamespaceIndentation: All
+AccessModifierOffset: -4
+SpacesInParentheses: false
+SpacesInAngles: false
+SpaceAfterTemplateKeyword: false
+SpaceInEmptyParentheses: false
+
+# Column limit
+ColumnLimit: 120
+MaxEmptyLinesToKeep: 2
+InsertNewlineAtEOF: true
+
+# Brace wrapping
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+  AfterClass: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterEnum: true
+  AfterNamespace: true
+  AfterCaseLabel: true
+  AfterExternBlock: true
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeWhile: false
+  BeforeLambdaBody: true
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+
+# Constructor initializer list formatting
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakConstructorInitializersBeforeComma: false
+
+# Alignment
+AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments: true
+AlignOperands: true
+AlignTrailingComments: true  # enable trailing comment alignment
+
+# Function / block rules
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AlwaysBreakTemplateDeclarations: Yes
+IndentCaseBlocks: true
+IndentCaseLabels: true
+
+# Includes
+IncludeCategories:
+  - Regex: '^<.*'
+    Priority: 1
+  - Regex: '^".*'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
+IncludeIsMainRegex: '([-_](test|unittest))?$'
+
+# Function / argument bin packing
+BinPackArguments: false
+BinPackParameters: true
+
+# C++11 braced list style
+Cpp11BracedListStyle: true
+
+# Macro formatting
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+RemoveBracesLLVM: true

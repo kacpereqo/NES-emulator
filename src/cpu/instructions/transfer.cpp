@@ -5,7 +5,7 @@
 #include "../cpu.h"
 
 // Transfer Accumulator to Index Register X
-void CPU::CPU::TAX(){
+void CPU::CPU::TAX() {
     this->X = this->A;
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->X == 0);
@@ -13,7 +13,7 @@ void CPU::CPU::TAX(){
 }
 
 // Transfer Accumulator to Index Register Y
-void CPU::CPU::TAY(){
+void CPU::CPU::TAY() {
     this->Y = this->A;
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->Y == 0);
@@ -21,7 +21,7 @@ void CPU::CPU::TAY(){
 }
 
 // Transfer Stack Pointer to Index Register X
-void CPU::CPU::TXA(){
+void CPU::CPU::TXA() {
     this->A = this->X;
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
@@ -29,7 +29,7 @@ void CPU::CPU::TXA(){
 }
 
 // Transfer Index Register X to Accumulator
-void CPU::CPU::TYA(){
+void CPU::CPU::TYA() {
     this->A = this->Y;
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);

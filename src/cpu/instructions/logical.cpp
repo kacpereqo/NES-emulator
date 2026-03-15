@@ -5,7 +5,7 @@
 #include "../cpu.h"
 
 // Logical AND
-void CPU::CPU::AND(){
+void CPU::CPU::AND() {
     std::cout << "AND" << " " << std::hex << static_cast<int>(this->temp_value) << std::endl;
     this->A &= this->temp_value;
 
@@ -22,7 +22,7 @@ void CPU::CPU::ORA() {
 }
 
 // Logical XOR
-void CPU::CPU::EOR(){
+void CPU::CPU::EOR() {
     this->A ^= this->temp_value;
 
     this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
@@ -30,7 +30,7 @@ void CPU::CPU::EOR(){
 }
 
 // Bit Test
-void CPU::CPU::BIT(){
+void CPU::CPU::BIT() {
     this->set_processor_status_flag(ProcessorStatus::Zero, (this->A & this->temp_value) == 0);
     this->set_processor_status_flag(ProcessorStatus::Overflow, this->temp_value & 0x40);
     this->set_processor_status_flag(ProcessorStatus::Negative, this->temp_value & 0x80);

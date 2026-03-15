@@ -31,23 +31,23 @@ void CPU::CPU::BMI() {
 // Branch if Not Equal (Zero flag clear)
 void CPU::CPU::BNE() {
     if (this->get_processor_status_flag(ProcessorStatus::Zero) == false)
-         this->PC += static_cast<std::int8_t>(this->temp_value);
+        this->PC += static_cast<std::int8_t>(this->temp_value);
 }
 
 // Branch if Positive (Negative flag clear)
 void CPU::CPU::BPL() {
     if (this->get_processor_status_flag(ProcessorStatus::Negative) == false)
-         this->PC += static_cast<std::int8_t>(this->temp_value);
+        this->PC += static_cast<std::int8_t>(this->temp_value);
 }
 
 // Branch if Overflow Clear
 void CPU::CPU::BVC() {
     if (this->get_processor_status_flag(ProcessorStatus::Overflow) == false)
-         this->PC += static_cast<std::int8_t>(this->temp_value);
+        this->PC += static_cast<std::int8_t>(this->temp_value);
 }
 
 // Branch if Overflow Set
 void CPU::CPU::BVS() {
     if (this->get_processor_status_flag(ProcessorStatus::Overflow) == true)
-         this->PC += static_cast<std::int8_t>(this->temp_value);
+        this->PC += static_cast<std::int8_t>(this->temp_value);
 }

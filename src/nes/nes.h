@@ -50,32 +50,32 @@
 // };
 
 namespace NES {
-class NES {
+    class NES {
+    public:
+        [[noreturn]] void run() {
+            for (int i = 0; i < 10; i++) {
+                cpu.run();
 
-public:
-  [[noreturn]] void run() {
-    for (int i = 0; i < 10; i++) {
-      cpu.run();
+                for (int j = 0; j < 3; j++)
+                    ppu.run();
+            }
+        }
 
-      for (int j = 0; j < 3; j++)
-        ppu.run();
-    }
-  }
-  NES() : cpu{bus}, apu{memory}, ppu(memory) {
-    cpu.init();
-    apu.init();
-    ppu.init();
-  }
+        NES() : cpu{bus}, apu{memory}, ppu(memory) {
+            cpu.init();
+            apu.init();
+            ppu.init();
+        }
 
-private:
-  CPU::CPU cpu;
-  APU::APU apu;
-  PPU::PPU ppu;
+    private:
+        CPU::CPU cpu;
+        APU::APU apu;
+        PPU::PPU ppu;
 
-  Bus::Bus bus;
+        Bus::Bus bus;
 
-  std::array<std::uint8_t, 0xFFFF> memory{};
-};
+        std::array<std::uint8_t, 0xFFFF> memory{};
+    };
 } // namespace NES
 
 #endif // NES_H

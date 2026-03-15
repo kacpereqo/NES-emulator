@@ -12,204 +12,225 @@
 #include "../bus/bus.hpp"
 
 namespace CPU {
+    namespace ResetState {
+        static constexpr std::uint8_t SP{0xFD}; // Stack starts at 0x0100
+        static constexpr std::uint16_t PC{0xFFFC}; // Program Counter starts at 0x8000
+        static constexpr std::uint8_t P{
+            ProcessorStatus::Unused |
+            ProcessorStatus::InterruptDisable |
+            ProcessorStatus::DecimalMode
+        };
+        static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
+        static constexpr std::uint8_t A{0};
+        static constexpr std::uint8_t X{0};
+        static constexpr std::uint8_t Y{0};
+    }
 
-namespace ResetState {
-static constexpr std::uint8_t SP{0xFD}; // Stack starts at 0x0100
-static constexpr std::uint16_t PC{0xFFFC}; // Program Counter starts at 0x8000
-static constexpr std::uint8_t P{ProcessorStatus::Unused |
-                                             ProcessorStatus::InterruptDisable |
-                                             ProcessorStatus::DecimalMode};
-static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
-static constexpr std::uint8_t A{0};
-static constexpr std::uint8_t X{0};
-static constexpr std::uint8_t Y{0};
-}
+    static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
 
-static constexpr std::uint32_t MEMORY_SIZE{0xFFFF + 1}; // 8B * 65535 = 64KB
+    class CPU {
+    public:
+        void set_pc(const std::uint16_t pc) { PC = pc; }
 
-class CPU {
-public:
-    void set_pc(const std::uint16_t pc) { PC = pc; }
+        struct Instruction {
+            using InstructionHandler = void (CPU::*)();
+            using AddressingModeHandler = void (CPU::*)();
 
-  struct Instruction {
-    using InstructionHandler = void (CPU::*)();
-    using AddressingModeHandler = void (CPU::*)();
+            InstructionHandler instruction_handler;
+            AddressingModeHandler addressing_mode_handler;
+            std::uint8_t cycles;
+        };
 
-    InstructionHandler instruction_handler;
-    AddressingModeHandler addressing_mode_handler;
-    std::uint8_t cycles;
-  };
-  /// Constructor
+        /// Constructor
 
-  explicit CPU(Bus::AbstractBus &bus)
-      : bus{bus}, PC{ResetState::PC}, SP{ResetState::SP}, A{ResetState::A}, X{ResetState::X}, Y{ResetState::Y},
-        P{ResetState::P} {}
+        explicit CPU(Bus::AbstractBus &bus)
+            : bus{bus}, PC{ResetState::PC}, SP{ResetState::SP}, A{ResetState::A}, X{ResetState::X}, Y{ResetState::Y},
+              P{ResetState::P} {
+        }
 
-  CPU(Bus::AbstractBus &bus, const std::uint16_t PC, const std::uint8_t SP,
-      const std::uint8_t A, const std::uint8_t X, const std::uint8_t Y,
-      const std::uint8_t P)
-      : bus{bus}, PC{PC}, SP{SP}, A{A}, X{X}, Y{Y}, P{P} {}
+        CPU(Bus::AbstractBus &bus, const std::uint16_t PC, const std::uint8_t SP,
+            const std::uint8_t A, const std::uint8_t X, const std::uint8_t Y,
+            const std::uint8_t P)
+            : bus{bus}, PC{PC}, SP{SP}, A{A}, X{X}, Y{Y}, P{P} {
+        }
 
-  [[nodiscard]] std::uint16_t get_PC() const { return PC; }
-  [[nodiscard]] std::uint8_t get_SP() const { return SP; }
-  [[nodiscard]] std::uint8_t get_A() const { return A; }
-  [[nodiscard]] std::uint8_t get_X() const { return X; }
-  [[nodiscard]] std::uint8_t get_Y() const { return Y; }
-  [[nodiscard]] std::uint8_t get_P() const { return P; }
+        [[nodiscard]] std::uint16_t get_PC() const { return PC; }
+        [[nodiscard]] std::uint8_t get_SP() const { return SP; }
+        [[nodiscard]] std::uint8_t get_A() const { return A; }
+        [[nodiscard]] std::uint8_t get_X() const { return X; }
+        [[nodiscard]] std::uint8_t get_Y() const { return Y; }
+        [[nodiscard]] std::uint8_t get_P() const { return P; }
 
-  void run();
-  void init();
+        void run();
 
-private:
-  bool after_reset{true};
+        void init();
 
-  Bus::AbstractBus &bus;
+    private:
+        bool after_reset{true};
 
-  std::uint8_t cpu_cycle_delay{0};
+        Bus::AbstractBus &bus;
 
-  std::uint16_t temp_address{0};
-  std::uint8_t temp_value{0};
+        std::uint8_t cpu_cycle_delay{0};
 
-  /// Registers
+        std::uint16_t temp_address{0};
+        std::uint8_t temp_value{0};
+
+        /// Registers
   /// https://www.nesdev.org/obelisk-6502-guide/registers.html
 
-  std::uint16_t PC; // Program Counter
-  std::uint8_t SP;  // Stack Pointer
-  std::uint8_t A;   // Accumulator
-  std::uint8_t X;   // Index Register X
-  std::uint8_t Y;   // Index Register Y
+        std::uint16_t PC; // Program Counter
+        std::uint8_t SP; // Stack Pointer
+        std::uint8_t A; // Accumulator
+        std::uint8_t X; // Index Register X
+        std::uint8_t Y; // Index Register Y
 
-  // std::array<std::uint8_t, 0xFFFF> &memory;
+        // std::array<std::uint8_t, 0xFFFF> &memory;
 
-  std::uint8_t P; // Processor Status
+        std::uint8_t P; // Processor Status
 
-  // 7  bit  0
-  // ---- ----
-  // NV1B DIZC
-  // |||| ||||
-  // |||| |||+- Carry
-  // |||| ||+-- Zero
-  // |||| |+--- Interrupt Disable
-  // |||| +---- Decimal
-  // |||+------ (No CPU effect; see: the B flag)
-  // ||+------- (No CPU effect; always pushed as 1)
-  // |+-------- Overflow
-  // +--------- Negative
+        // 7  bit  0
+        // ---- ----
+        // NV1B DIZC
+        // |||| ||||
+        // |||| |||+- Carry
+        // |||| ||+-- Zero
+        // |||| |+--- Interrupt Disable
+        // |||| +---- Decimal
+        // |||+------ (No CPU effect; see: the B flag)
+        // ||+------- (No CPU effect; always pushed as 1)
+        // |+-------- Overflow
+        // +--------- Negative
 
-  /// Running the CPU
+        /// Running the CPU
 
-  /// addressing
-  void addressing_accumulator();
-  void addressing_absolute();
-  void addressing_absolute_x();
-  void addressing_absolute_y();
-  void addressing_immediate();
-  void addressing_implied();
-  void addressing_indirect();
-  void addressing_indirect_x();
-  void addressing_indirect_y();
-  void addressing_relative();
-  void addressing_zero_page();
-  void addressing_zero_page_x();
-  void addressing_zero_page_y();
+        /// addressing
+        void addressing_accumulator();
 
-  /// Instructions
+        void addressing_absolute();
 
-  /// Load/Store
-  void LDA(); // Load Accumulator
-  void LDX(); // Load Index Register X
-  void LDY(); // Load Index Register Y
-  void STA(); // Store Accumulator
-  void STX(); // Store Index Register X
-  void STY(); // Store Index Register Y
+        void addressing_absolute_x();
 
-  /// Register Transfer
-  void TAX(); // Transfer Accumulator to Index Register X
-  void TAY(); // Transfer Accumulator to Index Register Y
-  void TXA(); // Transfer Stack Pointer to Index Register X
-  void TYA(); // Transfer Index Register X to Accumulator
+        void addressing_absolute_y();
 
-  /// Stack Operations
-  void TSX(); // Transfer Stack Pointer to Index Register X
-  void TXS(); // Transfer Index Register X to Stack Pointer
-  void PHA(); // Push Accumulator on Stack
-  void PHP(); // Push Processor Status on Stack
-  void PLA(); // Pull Accumulator from Stack
-  void PLP(); // Pull Processor Status from Stack
+        void addressing_immediate();
 
-  /// Logical
-  void AND(); // Logical AND
-  void ORA(); // Logical OR
-  void EOR(); // Logical XOR
-  void BIT(); // Bit Test
+        void addressing_implied();
 
-  /// Arithmetic
-  void ADC(); // Add with Carry
-  void SBC(); // Subtract with Carry
-  void CMP(); // Compare Accumulator
-  void CPX(); // Compare Index Register X
-  void CPY(); // Compare Index Register Y
+        void addressing_indirect();
 
-  /// Increments & Decrements
-  void INC(); // Increment Memory
-  void INX(); // Increment Index Register X
-  void INY(); // Increment Index Register Y
-  void DEC(); // Decrement Memory
-  void DEX(); // Decrement Index Register X
-  void DEY(); // Decrement Index Register Y
+        void addressing_indirect_x();
 
-  /// Shifts
-  void ASL();             // Arithmetic Shift Left
-  void ASL_accumulator(); // Arithmetic Shift Left Accumulator
-  void LSR();             // Logical Shift Right
-  void LSR_accumulator();
-  void ROL(); // Rotate Left
-  void ROL_accumulator();
-  void ROR(); // Rotate Right
-  void ROR_accumulator();
+        void addressing_indirect_y();
 
-  /// Jumps & Calls
-  void JMP(); // Jump to Address
-  void JSR(); // Jump to Subroutine
-  void RTS(); // Return from Subroutine
+        void addressing_relative();
 
-  /// Branches
-  void BCC(); // Branch if Equal
-  void BCS(); // Branch if Carry Set
-  void BEQ(); // Branch if Equal
-  void BMI(); // Branch if Minus
-  void BNE(); // Branch if Not Equal
-  void BPL(); // Branch if Positive
-  void BVC(); // Branch if Overflow Clear
-  void BVS(); // Branch if Overflow Set
+        void addressing_zero_page();
 
-  /// Control
-  void CLC(); // Clear Carry Flag
-  void CLD(); // Clear Decimal Mode
-  void CLI(); // Clear Interrupt Disable
-  void CLV(); // Clear Overflow Flag
-  void SEC(); // Set Carry Flag
-  void SED(); // Set Decimal Mode
-  void SEI(); // Set Interrupt Disable
+        void addressing_zero_page_x();
 
-  /// System Functions
-  void BRK(); // Force Break
-  void NOP(); // No Operation
-  void RTI(); // Stop Execution
+        void addressing_zero_page_y();
 
-  /// Utils
+        /// Instructions
 
-  void XXX(); // Illegal Instruction
+        /// Load/Store
+        void LDA(); // Load Accumulator
+        void LDX(); // Load Index Register X
+        void LDY(); // Load Index Register Y
+        void STA(); // Store Accumulator
+        void STX(); // Store Index Register X
+        void STY(); // Store Index Register Y
 
-  void set_processor_status_flag(std::uint8_t flag, bool value);
-  bool get_processor_status_flag(std::uint8_t flag) const;
+        /// Register Transfer
+        void TAX(); // Transfer Accumulator to Index Register X
+        void TAY(); // Transfer Accumulator to Index Register Y
+        void TXA(); // Transfer Stack Pointer to Index Register X
+        void TYA(); // Transfer Index Register X to Accumulator
 
-  void push_to_stack(std::uint8_t value);
-  void push_to_stack(std::uint16_t value);
+        /// Stack Operations
+        void TSX(); // Transfer Stack Pointer to Index Register X
+        void TXS(); // Transfer Index Register X to Stack Pointer
+        void PHA(); // Push Accumulator on Stack
+        void PHP(); // Push Processor Status on Stack
+        void PLA(); // Pull Accumulator from Stack
+        void PLP(); // Pull Processor Status from Stack
 
-  template <typename T> T pop_from_stack();
-};
+        /// Logical
+        void AND(); // Logical AND
+        void ORA(); // Logical OR
+        void EOR(); // Logical XOR
+        void BIT(); // Bit Test
 
+        /// Arithmetic
+        void ADC(); // Add with Carry
+        void SBC(); // Subtract with Carry
+        void CMP(); // Compare Accumulator
+        void CPX(); // Compare Index Register X
+        void CPY(); // Compare Index Register Y
+
+        /// Increments & Decrements
+        void INC(); // Increment Memory
+        void INX(); // Increment Index Register X
+        void INY(); // Increment Index Register Y
+        void DEC(); // Decrement Memory
+        void DEX(); // Decrement Index Register X
+        void DEY(); // Decrement Index Register Y
+
+        /// Shifts
+        void ASL(); // Arithmetic Shift Left
+        void ASL_accumulator(); // Arithmetic Shift Left Accumulator
+        void LSR(); // Logical Shift Right
+        void LSR_accumulator();
+
+        void ROL(); // Rotate Left
+        void ROL_accumulator();
+
+        void ROR(); // Rotate Right
+        void ROR_accumulator();
+
+        /// Jumps & Calls
+        void JMP(); // Jump to Address
+        void JSR(); // Jump to Subroutine
+        void RTS(); // Return from Subroutine
+
+        /// Branches
+        void BCC(); // Branch if Equal
+        void BCS(); // Branch if Carry Set
+        void BEQ(); // Branch if Equal
+        void BMI(); // Branch if Minus
+        void BNE(); // Branch if Not Equal
+        void BPL(); // Branch if Positive
+        void BVC(); // Branch if Overflow Clear
+        void BVS(); // Branch if Overflow Set
+
+        /// Control
+        void CLC(); // Clear Carry Flag
+        void CLD(); // Clear Decimal Mode
+        void CLI(); // Clear Interrupt Disable
+        void CLV(); // Clear Overflow Flag
+        void SEC(); // Set Carry Flag
+        void SED(); // Set Decimal Mode
+        void SEI(); // Set Interrupt Disable
+
+        /// System Functions
+        void BRK(); // Force Break
+        void NOP(); // No Operation
+        void RTI(); // Stop Execution
+
+        /// Utils
+
+        void XXX(); // Illegal Instruction
+
+        void set_processor_status_flag(std::uint8_t flag, bool value);
+
+        bool get_processor_status_flag(std::uint8_t flag) const;
+
+        void push_to_stack(std::uint8_t value);
+
+        void push_to_stack(std::uint16_t value);
+
+        template<typename T>
+        T pop_from_stack();
+    };
 } // namespace CPU
 
 #endif // CPU_H
