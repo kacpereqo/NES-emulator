@@ -1,6 +1,9 @@
 #include "../cpu.h"
 #include <gtest/gtest.h>
 
+#include "../../bus/fake_bus.hpp"
+
+
 TEST(CPU, initial_state) {
     std::array<std::uint8_t, CPU::MEMORY_SIZE> memory{};
     Bus::FakeBus bus{memory};

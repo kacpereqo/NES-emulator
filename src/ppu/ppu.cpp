@@ -16,7 +16,7 @@ namespace PPU {
     }
 
     void PPU::send_nmi_interrupt() const {
-        cpu.nmi_handler();
+        cpu.signal_nmi_interrupt();
     }
 
     void PPU::init() {
