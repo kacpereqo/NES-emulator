@@ -15,10 +15,12 @@ class NES {
 int main(int argc, char* argv[]) {
   SDL_Init(SDL_INIT_VIDEO);
 
+	std::uint32_t WIDTH = 256;
+	std::uint32_t HEIGHT = 240;
+
   SDL_Window *window = SDL_CreateWindow(
       "SDL3 Window",
-      800,
-      600,
+      WIDTH, HEIGHT,
       SDL_WINDOW_RESIZABLE
   );
 

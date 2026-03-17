@@ -2,6 +2,7 @@
 #include "../ppu/ppu.hpp"
 
 #include <algorithm>
+#include <assert.h>
 #include <stdexcept>
 
 namespace Bus {
@@ -12,12 +13,30 @@ namespace Bus {
     }
 
     std::uint8_t Bus::cpu_read(const std::uint16_t address) {
-        if (in_range(address, 0x0000, 0x1FFF)) {
-            if (address == PPU::Registers::STATUS)
-                ppu.latch_reset();
-
-            return ram[address % 0x0800];
+    	if (in_range(address, 0x0000, 0x1FFF)) {
+    		return ram[address % 0x0800];
         }
+
+    	if (in_range(address, 0x2000, 0x3FFF)) {
+
+    		assert(address != PPU::Registers::CONTROLLER &&
+				   address != PPU::Registers::MASK &&
+				   address != PPU::Registers::OAM &&
+				   address != PPU::Registers::SCROLL &&
+				   address != PPU::Registers::VRAM_ADDRESS
+				   );
+
+    		// Reading from $2002 (PPUSTATUS) resets the internal latch used by $2005 and $2006
+
+    		if (address == PPU::Registers::STATUS)
+    			return ppu.read_status();
+
+    		if (address == PPU::Registers::VRAM_DATA)
+    			return ppu.read_vram_data();
+
+    		if (address == PPU::Registers::OAM_DATA)
+    			return ppu.read_oam_data();
+    	}
 
         if (in_range(address, 0x8000, 0xFFFF))
             return rom[address - 0x8000];
@@ -26,13 +45,30 @@ namespace Bus {
     }
 
     void Bus::cpu_write(const std::uint16_t address, const std::uint8_t data) {
-        if (address >= 0x2000) {
-            ram[address % 0x0800] = data;
+    	if (in_range(address, 0x0000, 0x1FFF)) {
+    		ram[address % 0x0800] = data;
+    		return;
+    	}
 
-            if (address == PPU::Registers::SCROLL ||
-                address == PPU::Registers::VRAM_ADDRESS)
-                ppu.latch_set();
+        if (in_range(address, 0x2000, 0x3FFF) || address == PPU::Registers::OAM_DMA) {
+        	assert(address != PPU::Registers::STATUS &&
+				   address != PPU::Registers::OAM_DATA &&
+				   address != PPU::Registers::OAM_DMA);
 
+        	if (address == PPU::Registers::CONTROLLER)
+				ppu.write_ppu_controller(data);
+
+			else if (address == PPU::Registers::SCROLL)
+				ppu.write_ppu_scroll(data);
+
+        	else if (address == PPU::Registers::VRAM_ADDRESS)
+        		ppu.write_ppu_address(data);
+
+        	else if (address == PPU::Registers::VRAM_DATA)
+				ppu.write_vram_data(data);
+
+        	else if (address == PPU::Registers::OAM)
+        		ppu.write_oam_address(data);
         }
     }
 

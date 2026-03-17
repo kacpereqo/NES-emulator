@@ -28,19 +28,24 @@ namespace PPU {
 
     void run();
 
-    void vram_address_increment() const;
+    void vram_address_increment();
 
-    void latch_set();
-    void latch_reset();
+  	void write_vram_data(std::uint8_t data);
+	void write_ppu_scroll(std::uint8_t data);
+    void write_ppu_address(std::uint8_t data);
+  	void write_ppu_controller(std::uint8_t data);
+  	void write_oam_address(std::uint8_t data);
 
-    void signal_write_ppu_controller();
-    void signal_write_ppu_address();
-    void signal_write_ppu_scroll();
+  	std::uint8_t read_status();
+  	std::uint8_t read_oam_data();
+  	std::uint8_t read_vram_data();
 
-    void send_nmi_interrupt() const;
+private:
+  	uint32_t cycle {0};
+  	uint32_t scanline {0};
 
-  private:
     CPU::CPU& cpu;
+
     // Memory registers
     std::uint8_t &register_controller; // $2000
     std::uint8_t &register_mask; // $2001

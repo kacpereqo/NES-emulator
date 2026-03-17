@@ -15,11 +15,8 @@ namespace PPU {
     cpu(cpu){
     }
 
-    void PPU::send_nmi_interrupt() const {
-        cpu.signal_nmi_interrupt();
-    }
+	void PPU::init() {
 
-    void PPU::init() {
     }
 
     void PPU::load_chr_rom(std::vector<std::uint8_t> &&chr_rom) {
@@ -27,42 +24,101 @@ namespace PPU {
     }
 
     void PPU::run() {
+
+    	if (this->register_controller & Controller::NMI
+    		&& this->scanline == 241
+    		&& this->cycle == 1) {
+			this->cpu.signal_nmi_interrupt();
+    	}
+
+    	this->cycle++;
+    	if (this->cycle > 340) {
+			this->cycle = 0;
+			this->scanline++;
+		}
+
+    	if (this->scanline == 241 && this->cycle == 1) {
+			this->register_status |= Status::VBlank;
+		}
+
+    	if (this->scanline == 261 && this->cycle == 1) {
+    		this->register_status &= ~Status::VBlank;
+    	}
+
+		if (this->scanline > 261) {
+			this->scanline = 0;
+		}
     }
 
-    void PPU::vram_address_increment() const {
+    void PPU::vram_address_increment() {
         if (register_controller & Controller::Increment)
-            register_vram_address += 32;
+            current_vram_address += 32;
         else
-            register_vram_address += 1;
+            current_vram_address += 1;
     }
 
-
-    void PPU::latch_set() {
-        latch = true;
-    }
-
-    void PPU::latch_reset() {
-        latch = false;
-    }
 }
 
-    void PPU::PPU::signal_write_ppu_address() {
+    void PPU::PPU::write_ppu_address(uint8_t data) {
         if (!latch)
-            this->temp_vram_address = (this->register_vram_address & 0x3F) << 8;
+            this->temp_vram_address = (data & 0x3F) << 8;
         else {
-            this->temp_vram_address |= this->register_vram_address;
-            this->current_vram_address = this->temp_vram_address & 0x3F'FF;;
+            this->temp_vram_address |= data;
+			this->current_vram_address = this->temp_vram_address;
         }
 
         latch = !latch;
+
+		this->register_vram_address = this->temp_vram_address;
     }
 
-void PPU::PPU::signal_write_ppu_scroll() {
+	void PPU::PPU::write_ppu_controller(std::uint8_t data) {
+
+	const bool old_nmi = this->register_controller & Controller::NMI;
+	const bool new_nmi = data & Controller::NMI;
+
+	if (new_nmi && !old_nmi) {
+		if (this->register_status & Status::VBlank) {
+			this->cpu.signal_nmi_interrupt();
+		}
+	}
+
+	// Set new controller nametable to t (temp_vram_address) register
+	// https://www.nesdev.org/wiki/PPU_registers#PPUADDR
+
+	const std::uint8_t nametables = data & Controller::Nametable;
+	this->temp_vram_address = (this->temp_vram_address & 0xF3FF) | (nametables << 10);
+
+	this->register_controller = data;
+}
+
+std::uint8_t PPU::PPU::read_status()
+{
+	std::uint8_t temp = this->register_controller;
+	this->latch = false;
+
+	this->register_status &= ~Status::VBlank;
+
+	return temp;
+}
+
+    void PPU::PPU::write_ppu_scroll(uint8_t data) {
     latch = !latch;
+	this->register_scroll = data;
 }
 
-void PPU::PPU::signal_write_ppu_controller() {
-    if (this->register_controller & Controller::NMI) {
-        // NMI HANDLER
-    }
+    void PPU::PPU::write_vram_data(std::uint8_t data)
+{
+	vram[current_vram_address % VRAM_SIZE] = data;
+	vram_address_increment();
 }
+std::uint8_t PPU::PPU::read_oam_data()
+{
+	return this->register_oam_data;
+}
+std::uint8_t PPU::PPU::read_vram_data()
+{
+	return vram[current_vram_address % VRAM_SIZE];
+}
+void PPU::PPU::write_oam_address(std::uint8_t data)
+{}
