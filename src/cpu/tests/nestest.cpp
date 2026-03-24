@@ -26,8 +26,10 @@ TEST(CPU, nestest_full_validation) {
 	constexpr uint8_t P = (0x24);
 	constexpr uint8_t SP = (0xFD);
 
-    Bus::FakeBus bus{rom};
+    Bus::Bus bus;
 	CPU::CPU cpu{bus, PC, SP, A, X, Y, P};
+
+	bus.insert_cartridge(rom);
 
 	std::ifstream log("assets/nestest.log");
 	ASSERT_TRUE(log.is_open());
@@ -38,21 +40,21 @@ TEST(CPU, nestest_full_validation) {
 		uint16_t expected_PC;
 		uint8_t expected_A, expected_X, expected_Y, expected_P, expected_SP;
 
-		sscanf(line.c_str(),
-			   "%04hx %*[^A]A:%02hhx X:%02hhx Y:%02hhx P:%02hhx SP:%02hhx",
-			   &expected_PC,
-			   &expected_A,
-			   &expected_X,
-			   &expected_Y,
-			   &expected_P,
-			   &expected_SP);
+		sscanf(line.c_str(), "%04hx", &expected_PC);
 
-		ASSERT_EQ(cpu.get_PC(), expected_PC) << "Step " << i;
-		ASSERT_EQ(cpu.get_A(), expected_A) << "Step " << i;
-		ASSERT_EQ(cpu.get_X(), expected_X) << "Step " << i;
-		ASSERT_EQ(cpu.get_Y(), expected_Y) << "Step " << i;
-		ASSERT_EQ(cpu.get_P(), expected_P) << "Step " << i;
-		ASSERT_EQ(cpu.get_SP(), expected_SP) << "Step " << i;
+		size_t reg_pos = line.find("A:");
+		if (reg_pos != std::string::npos) {
+			sscanf(line.c_str() + reg_pos,
+				   "A:%02hhx X:%02hhx Y:%02hhx P:%02hhx SP:%02hhx",
+				   &expected_A, &expected_X, &expected_Y, &expected_P, &expected_SP);
+		}
+
+		ASSERT_EQ(cpu.get_PC(), expected_PC);
+		ASSERT_EQ(cpu.get_A(), expected_A) ;
+		ASSERT_EQ(cpu.get_X(), expected_X) ;
+		ASSERT_EQ(cpu.get_Y(), expected_Y) ;
+		ASSERT_EQ(cpu.get_P(), expected_P) ;
+		ASSERT_EQ(cpu.get_SP(), expected_SP) ;
 
 		cpu.run();
 	}

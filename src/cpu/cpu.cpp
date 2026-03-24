@@ -88,12 +88,23 @@ void CPU::CPU::addressing_immediate() {
 void CPU::CPU::addressing_implied() { ; }
 
 void CPU::CPU::addressing_indirect() {
-    const std::uint8_t low_byte = this->bus.cpu_read(this->PC++);
-    const std::uint8_t high_byte = this->bus.cpu_read(this->PC++);
-    const std::uint16_t address = (high_byte << 8) | low_byte;
+	const std::uint8_t pointer_low_byte = this->bus.cpu_read(this->PC++);
+	const std::uint8_t pointer_high_byte = this->bus.cpu_read(this->PC++);
 
-    this->temp_address =
-            this->bus.cpu_read(address) | (this->bus.cpu_read(address + 1) << 8);
+	const std::uint16_t pointer_address =
+		static_cast<std::uint16_t>(pointer_low_byte) |
+		(static_cast<std::uint16_t>(pointer_high_byte) << 8);
+
+	const std::uint8_t target_low_byte = this->bus.cpu_read(pointer_address);
+
+	const std::uint16_t target_high_byte_address =
+		(pointer_address & 0xFF00) | static_cast<std::uint8_t>(pointer_address + 1);
+
+	const std::uint8_t target_high_byte = this->bus.cpu_read(target_high_byte_address);
+
+	this->temp_address =
+		static_cast<std::uint16_t>(target_low_byte) |
+		(static_cast<std::uint16_t>(target_high_byte) << 8);
 }
 
 void CPU::CPU::addressing_indirect_x() {
@@ -106,12 +117,19 @@ void CPU::CPU::addressing_indirect_x() {
 }
 
 void CPU::CPU::addressing_indirect_y() {
-    this->temp_address = this->bus.cpu_read(PC++);
-    this->temp_address = (this->bus.cpu_read(temp_address) |
-                          (this->bus.cpu_read(temp_address + 1) & 0xFF) << 8) +
-                         this->Y;
+	const uint8_t zero_page_pointer_address = this->bus.cpu_read(this->PC++);
 
-    this->temp_value = this->bus.cpu_read(this->temp_address);
+	const uint8_t effective_base_low = this->bus.cpu_read(zero_page_pointer_address);
+
+	const uint8_t wrapped_pointer_high_address = static_cast<uint8_t>(zero_page_pointer_address + 1);
+	const uint8_t effective_base_high = this->bus.cpu_read(wrapped_pointer_high_address);
+
+	const uint16_t effective_base_address = static_cast<uint16_t>(effective_base_low) |
+											(static_cast<uint16_t>(effective_base_high) << 8);
+
+	this->temp_address = static_cast<uint16_t>(effective_base_address + this->Y);
+
+	this->temp_value = this->bus.cpu_read(this->temp_address);
 }
 
 void CPU::CPU::addressing_zero_page() {
@@ -127,10 +145,14 @@ void CPU::CPU::addressing_zero_page_x() {
 }
 
 void CPU::CPU::addressing_zero_page_y() {
-    this->temp_address = this->bus.cpu_read(PC) + this->Y;
-    this->temp_value = this->bus.cpu_read(this->temp_address);
+	const std::uint8_t base_address = this->bus.cpu_read(this->PC);
+	this->PC++;
 
-    this->PC++;
+	const std::uint8_t wrapped_address = static_cast<std::uint8_t>(base_address + this->Y);
+
+	this->temp_address = static_cast<std::uint16_t>(wrapped_address);
+
+	this->temp_value = this->bus.cpu_read(this->temp_address);
 }
 
 void CPU::CPU::addressing_relative() {

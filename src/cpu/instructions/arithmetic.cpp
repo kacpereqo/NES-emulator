@@ -14,8 +14,6 @@ std::int16_t to_twos_complement(std::int16_t value) {
 
 // Add with Carry
 void CPU::CPU::ADC() {
-    if (this->get_processor_status_flag(ProcessorStatus::DecimalMode)) return;
-
     // 1. Calculate the 16-bit result
     const std::uint16_t result =
             this->A + this->temp_value +

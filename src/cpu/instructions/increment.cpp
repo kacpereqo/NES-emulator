@@ -31,10 +31,11 @@ void CPU::CPU::INY() {
 // Decrement Memory
 void CPU::CPU::DEC() {
     const std::uint8_t value = this->bus.cpu_read(this->temp_address);
-    this->bus.cpu_write(this->temp_address, value - 1);
+	const std::uint8_t result = value - 1;
+    this->bus.cpu_write(this->temp_address, result );
 
-    this->set_processor_status_flag(ProcessorStatus::Zero, value == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, value & 0x80);
+    this->set_processor_status_flag(ProcessorStatus::Zero, result == 0);
+    this->set_processor_status_flag(ProcessorStatus::Negative, result & 0x80);
 }
 
 // Decrement Index Register X

@@ -36,6 +36,9 @@ add_executable(${PROJECT_NAME}
         src/bus/fake_bus.hpp
         src/bus/abstract_bus.hpp
         src/ppu/ppu.cpp
+        src/mapper/nrom.hpp
+        src/cartridge/cartridge.hpp
+        src/mapper/ines_header.hpp
 )
 enable_testing()
 
@@ -63,6 +66,12 @@ add_executable(${PROJECT_NAME}-TESTS
         src/cpu/tests/nestest.cpp
         src/bus/fake_bus.cpp
         src/bus/fake_bus.hpp
+        src/bus/bus.cpp
+        src/bus/bus.hpp
+        src/ppu/ppu.cpp
+        src/ppu/ppu.hpp
+        src/mapper/nrom.hpp
+        src/cartridge/cartridge.hpp
 )
 
 

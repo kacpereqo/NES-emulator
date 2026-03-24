@@ -2,6 +2,8 @@
 
 #include <array>
 #include <cstdint>
+#include <vector>
+#include "../cartridge/cartridge.hpp"
 #include "abstract_bus.hpp"
 
 namespace PPU {
@@ -11,9 +13,9 @@ namespace PPU {
 namespace Bus {
   class Bus final : public AbstractBus {
   public:
-    Bus() = delete;
 
-    Bus(std::array<std::uint8_t, 0x10000> &data, PPU::PPU &ppu);
+  	void insert_cartridge(std::vector<std::uint8_t> data);
+  	void connect_ppu(PPU::PPU &ppu) { this->ppu = &ppu; }
 
   	// Asserts due to R/W permissions
   	// https://www.nesdev.org/wiki/PPU_registers#Summary
@@ -28,9 +30,10 @@ namespace Bus {
                          std::uint16_t start,
                          std::uint16_t end);
 
-    PPU::PPU &ppu;
+  	PPU::PPU * ppu = nullptr;
+
+  	std::unique_ptr<Cartridge> cartridge;
 
     std::array<std::uint8_t, 0x800> ram{};
-    std::array<std::uint8_t, 0x8000> rom{};
   };
 }

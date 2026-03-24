@@ -6,13 +6,14 @@
 
 // Arithmetic Shift Left
 void CPU::CPU::ASL_accumulator() {
-    this->A <<= 1;
+	const std::uint8_t result = this->temp_value << 1;
 
-    this->set_processor_status_flag(ProcessorStatus::Carry,
-                                    this->temp_value & 0x80);
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->temp_value == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative,
-                                    this->temp_value & 0x80);
+	this->set_processor_status_flag(ProcessorStatus::Carry,
+									this->A & 0x80);
+	this->set_processor_status_flag(ProcessorStatus::Zero, result == 0);
+	this->set_processor_status_flag(ProcessorStatus::Negative, result & 0x80);
+
+	this->A = result;
 }
 
 void CPU::CPU::ASL() {
@@ -23,6 +24,9 @@ void CPU::CPU::ASL() {
                                     this->temp_value & 0x80);
     this->set_processor_status_flag(ProcessorStatus::Zero, result == 0);
     this->set_processor_status_flag(ProcessorStatus::Negative, result & 0x80);
+
+	// 229 - 0b11100101
+	// 103 - 0b01100111
 }
 
 void CPU::CPU::LSR_accumulator() {
@@ -74,16 +78,18 @@ void CPU::CPU::ROL() {
 }
 
 void CPU::CPU::ROR_accumulator() {
-    const std::uint8_t result =
-            (this->temp_value >> 1) |
-            this->get_processor_status_flag(ProcessorStatus::Carry);
-    this->A = result;
+	const uint8_t old_value = this->A;
+	const uint8_t old_carry = this->get_processor_status_flag(ProcessorStatus::Carry) ? 0x80 : 0x00;
 
-    this->set_processor_status_flag(ProcessorStatus::Carry,
-                                    this->temp_value & 0b0000'0001);
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->temp_value == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative,
-                                    result & 0b1000'0000);
+	const uint8_t result = (old_value >> 1) | old_carry;
+
+	this->set_processor_status_flag(ProcessorStatus::Carry, (old_value & 0x01) != 0);
+
+	this->set_processor_status_flag(ProcessorStatus::Zero, result == 0);
+
+	this->set_processor_status_flag(ProcessorStatus::Negative, (result & 0x80) != 0);
+
+	this->A = result;
 }
 
 // Rotate Right

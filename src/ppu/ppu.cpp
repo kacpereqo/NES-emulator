@@ -20,7 +20,7 @@ namespace PPU {
     }
 
     void PPU::load_chr_rom(std::vector<std::uint8_t> &&chr_rom) {
-        this->chr_rom = std::move(chr_rom);
+        std::ranges::copy(chr_rom, chr_rom.begin());
     }
 
     void PPU::run() {
