@@ -34,26 +34,26 @@ void CPU::CPU::signal_nmi_interrupt() {
 }
 
 void CPU::CPU::run() {
-    if (this->cpu_cycle_delay == 0) {
+    // if (this->cpu_cycle_delay == 0) {
+    //
+    //     if (is_nmi_pending) {
+    //         this->is_nmi_pending = false;
+    //         this->nmi_handler();
+    //         this->cpu_cycle_delay = 7;
+    //     }
 
-        if (is_nmi_pending) {
-            this->is_nmi_pending = false;
-            this->nmi_handler();
-            this->cpu_cycle_delay = 7;
-        }
+        // else {
+    const std::uint8_t opcode = this->bus.cpu_read(PC++);
 
-        else {
-            const std::uint8_t opcode = this->bus.cpu_read(PC++);
+    const auto [instruction_handler, addressing_mode_handler, cycles] = instruction_set[opcode];
 
-            const auto [instruction_handler, addressing_mode_handler, cycles] = instruction_set[opcode];
+    (this->*addressing_mode_handler)();
+    (this->*instruction_handler)();
+    this->cpu_cycle_delay = cycles;
+        // }
+    // }
 
-            (this->*addressing_mode_handler)();
-            (this->*instruction_handler)();
-            this->cpu_cycle_delay = cycles;
-        }
-    }
-
-    this->cpu_cycle_delay--;
+    // this->cpu_cycle_delay--;
 }
 
 void CPU::CPU::addressing_accumulator() { this->temp_value = this->A; }

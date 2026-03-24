@@ -11,12 +11,24 @@ namespace Bus {
 }
 
 namespace PPU {
+
   struct Sprite {
     std::uint8_t pos_y;
     std::uint8_t index;
     std::uint8_t attributes;
     std::uint8_t byte_x;
   };
+
+	struct Palette
+	{
+		std::array<std::uint8_t, 4> colors{};
+	};
+
+	struct Nametable
+	{
+		std::array<std::uint8_t, 960> data{};
+		std::array<std::uint8_t, 64> attribute_table{};
+	};
 
   class PPU {
   public:
@@ -65,10 +77,10 @@ private:
     std::uint8_t fine_x_scroll : 3 {0};          // x
     bool latch{false};                           // w
 
-    std::array<std::uint8_t, VRAM_SIZE> vram{};
-    std::array<Sprite, OAM_SIZE/sizeof(Sprite)> states{};
-    std::array<std::uint8_t, CHR_ROM_SIZE> palette{};
 
-    std::vector<std::uint8_t> chr_rom{};
+    std::array<std::uint8_t, VRAM_SIZE/sizeof(Nametable)> vram{}; // background infromation
+    std::array<Sprite, OAM_SIZE/sizeof(Sprite)> oam{}; // state of sprites
+    std::array<std::uint8_t, CHR_ROM_SIZE> chr_rom{}; // tile data is stored in CHR ROM, but palette data is stored in RAM, so we can write to it
+  	std::array<std::uint8_t, PALETTE_SIZE> palette; // pallets used by a screen
   };
 }

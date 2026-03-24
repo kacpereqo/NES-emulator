@@ -94,12 +94,12 @@ namespace PPU {
 
 std::uint8_t PPU::PPU::read_status()
 {
-	std::uint8_t temp = this->register_controller;
-	this->latch = false;
+	std::uint8_t data = this->register_controller;
 
 	this->register_status &= ~Status::VBlank;
+	this->latch = false;
 
-	return temp;
+	return data;
 }
 
     void PPU::PPU::write_ppu_scroll(uint8_t data) {

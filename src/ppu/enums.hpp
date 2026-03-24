@@ -8,9 +8,10 @@
 #include <cstdint>
 
 namespace PPU {
-  constexpr std::uint16_t VRAM_SIZE{0x800}; // 2KB of VRAM
+  constexpr std::uint16_t VRAM_SIZE{0x2000}; // 2KB of VRAM
   constexpr std::uint16_t   OAM_SIZE{0x100}; // 256 bytes of OAM
   constexpr std::uint16_t CHR_ROM_SIZE{0x2000}; // 8KB of CHR ROM
+	constexpr std::uint16_t PALETTE_SIZE{0x20}; // 32 bytes of palette RAM
 
   namespace Registers {
     constexpr std::uint16_t CONTROLLER{0x2000};
@@ -22,6 +23,7 @@ namespace PPU {
     constexpr std::uint16_t VRAM_ADDRESS{0x2006};
     constexpr std::uint16_t VRAM_DATA{0x2007};
     constexpr std::uint16_t OAM_DMA{0x4014};
+    constexpr std::uint16_t PALETTE{0x3F00};
   } // namespace Registers
 
   /// PPUCTRL
@@ -79,6 +81,17 @@ namespace Status {
     Sprite_overflow = 1 << 5 // Sprite overflow
     // Lower 5 bits are unused
   };
+}
+
+namespace OAM::Attributes
+{
+	enum Attributes : std::uint8_t
+	{
+		palette = 0b11, // Bits 0-1: Palette (4 to 7) of sprite
+		priority = 1 << 5, // Bit 5: Sprite-to-background priority (0: in front of background; 1: behind background)
+		flip_horizontal = 1 << 6, // Bit 6: Flip sprite horizontally
+		flip_vertical = 1 << 7 // Bit 7: Flip sprite vertically
+	};
 }
 
 // namespace PPU

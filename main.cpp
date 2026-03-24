@@ -10,6 +10,19 @@ class NES {
   PPU::PPU ppu;
 
   explicit NES(std::array<std::uint8_t, 0x10000> data) : cpu(bus), bus(data, ppu), ppu(bus, cpu) {}
+
+	void connect_display()
+  {
+
+  }
+
+	void run()
+  {
+	cpu.run();
+  	ppu.run();
+  	ppu.run();
+  	ppu.run();
+  }
 };
 
 int main(int argc, char* argv[]) {

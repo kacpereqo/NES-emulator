@@ -60,8 +60,23 @@ add_executable(${PROJECT_NAME}-TESTS
         src/apu/apu.h
         src/cpu/cpu.cpp
         src/cpu/tests/instruction_arithmetic.cpp
+        src/cpu/tests/nestest.cpp
+        src/bus/fake_bus.cpp
+        src/bus/fake_bus.hpp
 )
 
 
 include(cmake/Fetch-gtest.cmake)
 include(cmake/Fetch-SDL3.cmake)
+
+configure_file(
+        ${CMAKE_SOURCE_DIR}/src/cpu/tests/assets/nestest.nes
+        ${CMAKE_BINARY_DIR}/assets/nestest.nes
+        COPYONLY
+)
+
+configure_file(
+        ${CMAKE_SOURCE_DIR}/src/cpu/tests/assets/nestest.log
+        ${CMAKE_BINARY_DIR}/assets/nestest.log
+        COPYONLY
+)
