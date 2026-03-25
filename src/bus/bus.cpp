@@ -74,14 +74,21 @@ namespace Bus
 			else if (reg == PPU::Registers::OAM)
 				ppu->write_oam_address(data);
 
+			else if (reg == PPU::Registers::OAM_DMA)
+				ppu->write_oam_dma(data);
+
+			else if (reg == PPU::Registers::MASK)
+				ppu->write_ppu_mask(data);
+
+			else if (address == PPU::Registers::OAM_DATA)
+				ppu->write_oam_data(data);
+
 			return;
 		}
 
 		// Cartridge RAM
-		if (in_range(address, MemoryRegion::CART_RAM_START, MemoryRegion::CART_RAM_END)) {
+		if (in_range(address, MemoryRegion::CART_RAM_START, MemoryRegion::CART_RAM_END))
 			cartridge->map_write(address, data);
-			return;
-		}
 	}
 
 	std::uint8_t &Bus::ppu_get_register(const std::uint16_t address)

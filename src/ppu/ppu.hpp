@@ -49,21 +49,41 @@ namespace PPU
 		std::uint16_t get_scanline();
 		std::uint16_t get_cycle();
 
-		void write_vram_data(std::uint8_t data);
-		void write_ppu_scroll(std::uint8_t data);
-		void write_ppu_address(std::uint8_t data);
-		void write_ppu_controller(std::uint8_t data);
-		void write_oam_address(std::uint8_t data);
+		/*
+		Name        Addr    Bits                Type
+		--------------------------------------------------
+		PPUCTRL     $2000   VPHB SINN           W
+		PPUMASK     $2001   BGRs bMmG           W
+		PPUSTATUS   $2002   VSO- ----           R
+		OAMADDR     $2003   AAAA AAAA           W
+		OAMDATA     $2004   DDDD DDDD           RW
+		PPUSCROLL   $2005   XXXX XXXX           Wx2
+		PPUADDR     $2006   ..AA AAAA AAAA AAAA Wx2
+		PPUDATA     $2007   DDDD DDDD           RW
+		OAMDMA      $4014   AAAA AAAA           W
+		--------------------------------------------------
+		*/
 
 		std::uint8_t read_status();
 		std::uint8_t read_oam_data();
 		std::uint8_t read_vram_data();
+
+		void write_ppu_controller(std::uint8_t data);
+		void write_ppu_mask(std::uint8_t data);
+		void write_oam_address(std::uint8_t data);
+		void write_oam_data(std::uint8_t data);
+		void write_ppu_scroll(std::uint8_t data);
+		void write_ppu_address(std::uint8_t data);
+		void write_vram_data(std::uint8_t data);
+		void write_oam_dma(std::uint8_t data);
+
 
 	private:
 		uint32_t cycle{0};
 		uint32_t scanline{0};
 
 		CPU::CPU &cpu;
+		Bus::Bus &bus;
 
 		// Memory registers
 		std::uint8_t &register_controller;   // $2000
@@ -85,8 +105,8 @@ namespace PPU
 		bool          latch{false};                  // w
 
 
-		std::array<std::uint8_t, VRAM_SIZE / sizeof(Nametable)> vram{}; // background infromation
-		std::array<Sprite, OAM_SIZE / sizeof(Sprite)>           oam{};  // state of sprites
+		std::array<std::uint8_t, VRAM_SIZE> vram{}; // background infromation
+		std::array<std::uint8_t, OAM_SIZE>  oam{};  // state of sprites
 		std::array<std::uint8_t, CHR_ROM_SIZE>
 		  chr_rom{}; // tile data is stored in CHR ROM, but palette data is stored in RAM, so we can write to it
 		std::array<std::uint8_t, PALETTE_SIZE> palette; // pallets used by a screen

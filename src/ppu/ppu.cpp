@@ -13,7 +13,8 @@ namespace PPU
 	    register_vram_address{bus.ppu_get_register(Registers::VRAM_ADDRESS)},
 	    register_vram_data{bus.ppu_get_register(Registers::VRAM_DATA)},
 	    register_oam_dma{bus.ppu_get_register(Registers::OAM_DMA)},
-	    cpu(cpu)
+	    cpu(cpu),
+	    bus(bus)
 	{}
 
 	void PPU::init()
@@ -101,7 +102,7 @@ void PPU::PPU::write_ppu_controller(std::uint8_t data)
 
 std::uint8_t PPU::PPU::read_status()
 {
-	std::uint8_t data = this->register_controller;
+	std::uint8_t data = this->register_status;
 
 	this->register_status &= ~Status::VBlank;
 	this->latch = false;
@@ -120,13 +121,35 @@ void PPU::PPU::write_vram_data(std::uint8_t data)
 	vram[current_vram_address % VRAM_SIZE] = data;
 	vram_address_increment();
 }
+
 std::uint8_t PPU::PPU::read_oam_data()
 {
-	return this->register_oam_data;
+	return this->oam[register_oam_address];
 }
 std::uint8_t PPU::PPU::read_vram_data()
 {
 	return vram[current_vram_address % VRAM_SIZE];
 }
+
 void PPU::PPU::write_oam_address(std::uint8_t data)
-{}
+{
+	this->register_oam_address = data;
+}
+void PPU::PPU::write_ppu_mask(std::uint8_t data)
+{
+	this->register_mask = data;
+}
+void PPU::PPU::write_oam_data(std::uint8_t data)
+{
+	this->oam[register_oam_address++] = data;
+}
+
+void PPU::PPU::write_oam_dma(std::uint8_t data)
+{
+	const std::uint16_t cpu_start_address = data << 8;
+
+	for (size_t i = 0; i < 0x100; i++) {
+		oam[register_oam_address] = bus.cpu_read(cpu_start_address + i);
+		register_oam_address      = (register_oam_address + 1) & 0xFF;
+	}
+}
