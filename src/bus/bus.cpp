@@ -5,89 +5,96 @@
 #include <assert.h>
 #include <stdexcept>
 
-namespace Bus {
-
+namespace Bus
+{
 	void Bus::insert_cartridge(std::vector<std::uint8_t> data)
 	{
-		this->cartridge = std::make_unique<Cartridge>(data);
+		cartridge = std::make_unique<Cartridge>(data);
 	}
 
-	std::uint8_t Bus::cpu_read(const std::uint16_t address) {
-    	if (in_range(address, 0x0000, 0x1FFF)) {
-    		return ram[address % 0x0800];
-        }
+	std::uint8_t Bus::cpu_read(const std::uint16_t address)
+	{
+		// RAM (mirrored every 0x0800)
+		if (in_range(address, MemoryRegion::RAM_START, MemoryRegion::RAM_END))
+			return ram[address % 0x0800];
 
-    	if (in_range(address, 0x2000, 0x3FFF)) {
+		// PPU registers (mirrored every 8 bytes)
+		if (in_range(address, MemoryRegion::PPU_REG_START, MemoryRegion::PPU_REG_END)) {
+			const std::uint16_t reg = (address - MemoryRegion::PPU_REG_START) % 8 + MemoryRegion::PPU_REG_START;
 
-    		assert(ppu != nullptr);
-    		assert(address != PPU::Registers::CONTROLLER &&
-				   address != PPU::Registers::MASK &&
-				   address != PPU::Registers::OAM &&
-				   address != PPU::Registers::SCROLL &&
-				   address != PPU::Registers::VRAM_ADDRESS
-				   );
+			assert(ppu != nullptr);
 
-    		// Reading from $2002 (PPUSTATUS) resets the internal latch used by $2005 and $2006
+			if (reg == PPU::Registers::STATUS)
+				return ppu->read_status();
 
-    		if (address == PPU::Registers::STATUS)
-    			return ppu->read_status();
+			if (reg == PPU::Registers::VRAM_DATA)
+				return ppu->read_vram_data();
 
-    		if (address == PPU::Registers::VRAM_DATA)
-    			return ppu->read_vram_data();
+			if (reg == PPU::Registers::OAM_DATA)
+				return ppu->read_oam_data();
 
-    		if (address == PPU::Registers::OAM_DATA)
-    			return ppu->read_oam_data();
-    	}
+			return 0x00; // open bus / unused reads
+		}
 
-        if (in_range(address, 0x8000, 0xFFFF))
-            return cartridge->map_read(address);
+		// Cartridge ROM
+		if (in_range(address, MemoryRegion::CART_ROM_START, MemoryRegion::CART_ROM_END))
+			return cartridge->map_read(address);
 
-        return 0xFF;
-    }
+		return 0xFF;
+	}
 
-    void Bus::cpu_write(const std::uint16_t address, const std::uint8_t data) {
-    	if (in_range(address, 0x0000, 0x1FFF)) {
-    		ram[address % 0x0800] = data;
-    		return;
-    	}
+	void Bus::cpu_write(const std::uint16_t address, const std::uint8_t data)
+	{
+		// RAM
+		if (in_range(address, MemoryRegion::RAM_START, MemoryRegion::RAM_END)) {
+			ram[address % 0x0800] = data;
+			return;
+		}
 
-        if (in_range(address, 0x2000, 0x3FFF) || address == PPU::Registers::OAM_DMA) {
-        	assert(ppu != nullptr);
-        	assert(address != PPU::Registers::STATUS &&
-				   address != PPU::Registers::OAM_DATA &&
-				   address != PPU::Registers::OAM_DMA);
+		// PPU registers + DMA
+		if (in_range(address, MemoryRegion::PPU_REG_START, MemoryRegion::PPU_REG_END) ||
+		    address == PPU::Registers::OAM_DMA) {
 
-        	if (address == PPU::Registers::CONTROLLER)
+			const std::uint16_t reg = (address - MemoryRegion::PPU_REG_START) % 8 + MemoryRegion::PPU_REG_START;
+
+			assert(ppu != nullptr);
+
+			if (reg == PPU::Registers::CONTROLLER)
 				ppu->write_ppu_controller(data);
 
-			else if (address == PPU::Registers::SCROLL)
+			else if (reg == PPU::Registers::SCROLL)
 				ppu->write_ppu_scroll(data);
 
-        	else if (address == PPU::Registers::VRAM_ADDRESS)
-        		ppu->write_ppu_address(data);
+			else if (reg == PPU::Registers::VRAM_ADDRESS)
+				ppu->write_ppu_address(data);
 
-        	else if (address == PPU::Registers::VRAM_DATA)
+			else if (reg == PPU::Registers::VRAM_DATA)
 				ppu->write_vram_data(data);
 
-        	else if (address == PPU::Registers::OAM)
-        		ppu->write_oam_address(data);
-        }
+			else if (reg == PPU::Registers::OAM)
+				ppu->write_oam_address(data);
 
-		if (in_range(address, 0x6000, 0x7FFF)) {
-			cartridge->map_write(address, data);
+			return;
 		}
-    }
 
-    std::uint8_t &Bus::ppu_get_register(const std::uint16_t address) {
-        if (in_range(address, 0x2000, 0x2007))
-            return ram[address % 8];
+		// Cartridge RAM
+		if (in_range(address, MemoryRegion::CART_RAM_START, MemoryRegion::CART_RAM_END)) {
+			cartridge->map_write(address, data);
+			return;
+		}
+	}
 
-        throw std::out_of_range("PPU register address out of range");
-    }
+	std::uint8_t &Bus::ppu_get_register(const std::uint16_t address)
+	{
+		if (in_range(address, MemoryRegion::PPU_REG_START, MemoryRegion::PPU_REG_END))
+			return ram[address % 8];
 
-    bool Bus::in_range(const std::uint16_t address,
-                       const std::uint16_t start,
-                       const std::uint16_t end) {
-        return address >= start && address <= end;
-    }
-}
+		throw std::out_of_range("PPU register address out of range");
+	}
+
+	bool Bus::in_range(const std::uint16_t address, const std::uint16_t start, const std::uint16_t end)
+	{
+		return address >= start && address <= end;
+	}
+
+} // namespace Bus

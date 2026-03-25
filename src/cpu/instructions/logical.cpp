@@ -5,32 +5,36 @@
 #include "../cpu.h"
 
 // Logical AND
-void CPU::CPU::AND() {
-    this->A &= this->temp_value;
+void CPU::CPU::AND()
+{
+	this->A &= this->temp_value;
 
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
+	this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
+	this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
 }
 
 // Logical OR
-void CPU::CPU::ORA() {
-    this->A |= this->temp_value;
+void CPU::CPU::ORA()
+{
+	this->A |= this->temp_value;
 
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
+	this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
+	this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
 }
 
 // Logical XOR
-void CPU::CPU::EOR() {
-    this->A ^= this->temp_value;
+void CPU::CPU::EOR()
+{
+	this->A ^= this->temp_value;
 
-    this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
+	this->set_processor_status_flag(ProcessorStatus::Zero, this->A == 0);
+	this->set_processor_status_flag(ProcessorStatus::Negative, this->A & 0x80);
 }
 
 // Bit Test
-void CPU::CPU::BIT() {
-    this->set_processor_status_flag(ProcessorStatus::Zero, (this->A & this->temp_value) == 0);
-    this->set_processor_status_flag(ProcessorStatus::Overflow, this->temp_value & 0x40);
-    this->set_processor_status_flag(ProcessorStatus::Negative, this->temp_value & 0x80);
+void CPU::CPU::BIT()
+{
+	this->set_processor_status_flag(ProcessorStatus::Zero, (this->A & this->temp_value) == 0);
+	this->set_processor_status_flag(ProcessorStatus::Overflow, this->temp_value & 0x40);
+	this->set_processor_status_flag(ProcessorStatus::Negative, this->temp_value & 0x80);
 }

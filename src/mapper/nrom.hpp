@@ -1,21 +1,20 @@
 #pragma once
 
-#include "mapper.hpp"
 #include <cstdint>
 #include <vector>
+#include "mapper.hpp"
 
 namespace Mapper
 {
 	class NROM : public Mapper
 	{
 	public:
-		NROM(std::vector<std::uint8_t>& prg, std::vector<std::uint8_t>& ram)
-			: prg_rom(prg), prg_ram(ram) {}
+		NROM(std::vector<std::uint8_t> &prg, std::vector<std::uint8_t> &ram) : prg_rom(prg), prg_ram(ram)
+		{}
 
 		std::uint8_t map_cpu_read(std::uint16_t address) override
 		{
-			if (address >= 0x6000 && address <= 0x7FFF)
-			{
+			if (address >= 0x6000 && address <= 0x7FFF) {
 				// PRG RAM
 				return prg_ram[address - 0x6000];
 			}
@@ -36,13 +35,11 @@ namespace Mapper
 		void map_cpu_write(std::uint16_t address, std::uint8_t data) override
 		{
 			if (address >= 0x6000 && address <= 0x7FFF)
-			{
 				prg_ram[address - 0x6000] = data;
-			}
 		}
 
 	private:
-		std::vector<std::uint8_t>& prg_rom;
-		std::vector<std::uint8_t>& prg_ram;
+		std::vector<std::uint8_t> &prg_rom;
+		std::vector<std::uint8_t> &prg_ram;
 	};
-}
+} // namespace Mapper

@@ -7,15 +7,16 @@
 #include <cstdint>
 
 
+namespace Mapper
+{
+	class Mapper
+	{
+	public:
+		virtual ~Mapper() = default;
 
-namespace Mapper {
-    class Mapper {
-    public:
-        virtual ~Mapper() = default;
-
-        virtual std::uint8_t map_cpu_read(std::uint16_t address) = 0;
-        virtual void map_cpu_write(std::uint16_t address, std::uint8_t data) = 0;
-    };
+		virtual std::uint8_t map_cpu_read(std::uint16_t address)                     = 0;
+		virtual void         map_cpu_write(std::uint16_t address, std::uint8_t data) = 0;
+	};
 
 	namespace MapperId
 	{
@@ -26,4 +27,4 @@ namespace Mapper {
 	}
 
 
-} // namespace Cartridge
+} // namespace Mapper

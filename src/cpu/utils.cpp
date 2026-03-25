@@ -4,46 +4,53 @@
 
 #include "cpu.h"
 
-void CPU::CPU::XXX() { ; }
-
-void CPU::CPU::set_processor_status_flag(const std::uint8_t flag,
-                                         const bool value) {
-    if (value) {
-        P |= flag;
-    } else {
-        P &= ~flag;
-    }
+void CPU::CPU::XXX()
+{
+	;
 }
 
-bool CPU::CPU::get_processor_status_flag(const std::uint8_t flag) const {
-    return P & flag;
+void CPU::CPU::set_processor_status_flag(const std::uint8_t flag, const bool value)
+{
+	if (value)
+		P |= flag;
+	else
+		P &= ~flag;
 }
 
-void CPU::CPU::push_to_stack(const std::uint8_t value) {
-    this->bus.cpu_write(0x100 + SP, value);
-    this->SP--;
+bool CPU::CPU::get_processor_status_flag(const std::uint8_t flag) const
+{
+	return P & flag;
 }
 
-void CPU::CPU::push_to_stack(const std::uint16_t value) {
-    this->bus.cpu_write(0x100 + SP, (value >> 8) & 0xFF); // Push high byte
-    this->SP--;
-
-    this->bus.cpu_write(0x100 + SP, value & 0xFF); // Push low byte
-    this->SP--;
+void CPU::CPU::push_to_stack(const std::uint8_t value)
+{
+	this->bus.cpu_write(0x100 + SP, value);
+	this->SP--;
 }
 
-template<>
-std::uint16_t CPU::CPU::pop_from_stack<std::uint16_t>() {
-    SP++;
-    const std::uint8_t low_byte = this->bus.cpu_read(0x100 + SP);
+void CPU::CPU::push_to_stack(const std::uint16_t value)
+{
+	this->bus.cpu_write(0x100 + SP, (value >> 8) & 0xFF); // Push high byte
+	this->SP--;
 
-    SP++;
-    const std::uint8_t high_byte = this->bus.cpu_read(0x100 + SP);
-    return (high_byte << 8) | low_byte;
+	this->bus.cpu_write(0x100 + SP, value & 0xFF); // Push low byte
+	this->SP--;
 }
 
 template<>
-std::uint8_t CPU::CPU::pop_from_stack<std::uint8_t>() {
-    SP++;
-    return this->bus.cpu_read(0x100 + SP);
+std::uint16_t CPU::CPU::pop_from_stack<std::uint16_t>()
+{
+	SP++;
+	const std::uint8_t low_byte = this->bus.cpu_read(0x100 + SP);
+
+	SP++;
+	const std::uint8_t high_byte = this->bus.cpu_read(0x100 + SP);
+	return (high_byte << 8) | low_byte;
+}
+
+template<>
+std::uint8_t CPU::CPU::pop_from_stack<std::uint8_t>()
+{
+	SP++;
+	return this->bus.cpu_read(0x100 + SP);
 }
