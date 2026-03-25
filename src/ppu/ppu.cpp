@@ -28,6 +28,7 @@ namespace PPU
 	void PPU::run()
 	{
 
+
 		if (this->register_controller & Controller::NMI && this->scanline == 241 && this->cycle == 1)
 			this->cpu.signal_nmi_interrupt();
 
@@ -152,4 +153,40 @@ void PPU::PPU::write_oam_dma(std::uint8_t data)
 		oam[register_oam_address] = bus.cpu_read(cpu_start_address + i);
 		register_oam_address      = (register_oam_address + 1) & 0xFF;
 	}
+}
+
+std::uint16_t PPU::PPU::map_vram_mirroring(const std::uint16_t vram_address)
+{
+	assert(vram_address >= 0x2000 && vram_address < 0x3000);
+
+	INesHeader::Mirroring mirroring = bus.get_cartrdige_mirroring();
+
+	if (mirroring == INesHeader::Mirroring::Horizontal) {
+		if (vram_address >= 0x2000 && vram_address < 0x2400)
+			return vram_address - 0x2000;
+
+		if (vram_address >= 0x2400 && vram_address < 0x2800)
+			return vram_address - 0x2000;
+
+		if (vram_address >= 0x2800 && vram_address < 0x2C00)
+			return vram_address - 0x2000 + sizeof(Nametable);
+
+		if (vram_address >= 0x2C00 && vram_address < 0x3000)
+			return vram_address - 0x2000 + sizeof(Nametable);
+	}
+
+	else if (mirroring == INesHeader::Mirroring::Vertical) {
+		if (vram_address >= 0x2000 && vram_address < 0x2400)
+			return vram_address - 0x2000;
+
+		if (vram_address >= 0x2400 && vram_address < 0x2800)
+			return vram_address - 0x2000 + sizeof(Nametable);
+
+		if (vram_address >= 0x2800 && vram_address < 0x2C00)
+			return vram_address - 0x2000;
+
+		if (vram_address >= 0x2C00 && vram_address < 0x3000)
+			return vram_address - 0x2000 + sizeof(Nametable);
+	}
+	return 0x0;
 }

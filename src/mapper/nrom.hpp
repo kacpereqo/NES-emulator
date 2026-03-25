@@ -9,7 +9,8 @@ namespace Mapper
 	class NROM : public Mapper
 	{
 	public:
-		NROM(std::vector<std::uint8_t> &prg, std::vector<std::uint8_t> &ram) : prg_rom(prg), prg_ram(ram)
+		NROM(std::vector<std::uint8_t> &prg, std::vector<std::uint8_t> &ram, std::vector<std::uint8_t> &chr) :
+		    prg_rom(prg), prg_ram(ram), chr_rom(chr)
 		{}
 
 		std::uint8_t map_cpu_read(std::uint16_t address) override
@@ -38,8 +39,14 @@ namespace Mapper
 				prg_ram[address - 0x6000] = data;
 		}
 
+		std::uint8_t read_chr_rom(std::uint16_t address) override
+		{
+			return prg_ram[address];
+		}
+
 	private:
 		std::vector<std::uint8_t> &prg_rom;
 		std::vector<std::uint8_t> &prg_ram;
+		std::vector<std::uint8_t> &chr_rom;
 	};
 } // namespace Mapper

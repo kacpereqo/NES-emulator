@@ -19,19 +19,21 @@ class Cartridge
 public:
 	explicit Cartridge(std::vector<std::uint8_t> data)
 	{
-		std::size_t size = data.size();
-
 		INesHeader::Header header{};
 		memcpy(&header, data.data(), sizeof(header));
 
-		const std::uint32_t prg_rom_size = header.size_of_prg_rom * 16 * 1024;
-		const std::uint32_t chr_rom_size = header.size_of_prg_rom * 8 * 1024;
+		constexpr size_t    KB           = 1024;
+		const std::uint32_t prg_rom_size = header.size_of_prg_rom * 16 * KB;
+		const std::uint32_t chr_rom_size = header.size_of_prg_rom * 8 * KB;
 
 		const std::uint8_t mapperNumber = ((header.flags_7 & INesHeader::flag7::MapperUpperNibble) >> 4) |
 		                                  (header.flags_6 & INesHeader::flag6::MapperLowerNibble);
 
 		this->prg_rom.resize(prg_rom_size);
 		this->chr_rom.resize(chr_rom_size);
+
+		const std::uint8_t mirroring_bit = header.flags_6 & INesHeader::flag6::Mirroring;
+		this->mirroring = mirroring_bit ? INesHeader::Mirroring::Vertical : INesHeader::Mirroring::Horizontal;
 
 		this->mapper = this->get_mapper_by_id(mapperNumber);
 
@@ -59,12 +61,24 @@ public:
 		mapper->map_cpu_write(address, data);
 	}
 
+	std::uint8_t map_read_chr_rom(std::uint16_t address)
+	{
+		assert(mapper != nullptr);
+
+		mapper->map_cpu_read(address);
+	}
+
+	INesHeader::Mirroring get_mirroring()
+	{
+		return this->mirroring;
+	}
+
 private:
 	std::unique_ptr<Mapper::Mapper> get_mapper_by_id(const std::uint8_t mapper_number)
 	{
 		switch (mapper_number) {
 			case (Mapper::MapperId::NROM):
-				return std::make_unique<Mapper::NROM>(prg_rom, prg_ram);
+				return std::make_unique<Mapper::NROM>(prg_rom, prg_ram, chr_rom);
 			default:
 				throw;
 		}
@@ -73,6 +87,8 @@ private:
 	std::vector<std::uint8_t> prg_rom;
 	std::vector<std::uint8_t> chr_rom;
 	std::vector<std::uint8_t> prg_ram;
+
+	INesHeader::Mirroring mirroring;
 
 	std::unique_ptr<Mapper::Mapper> mapper;
 };

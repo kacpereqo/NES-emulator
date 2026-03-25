@@ -98,10 +98,17 @@ namespace Bus
 
 		throw std::out_of_range("PPU register address out of range");
 	}
+	std::uint8_t Bus::ppu_read_chr_rom(std::uint16_t address)
+	{
+		return this->cartridge->map_read_chr_rom(address);
+	}
 
 	bool Bus::in_range(const std::uint16_t address, const std::uint16_t start, const std::uint16_t end)
 	{
 		return address >= start && address <= end;
 	}
-
+	INesHeader::Mirroring Bus::get_cartrdige_mirroring()
+	{
+		return this->cartridge->get_mirroring();
+	}
 } // namespace Bus

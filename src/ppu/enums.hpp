@@ -9,10 +9,30 @@
 
 namespace PPU
 {
-	constexpr std::uint16_t VRAM_SIZE{0x2000};    // 2KB of VRAM
-	constexpr std::uint16_t OAM_SIZE{0x100};      // 256 bytes of OAM
-	constexpr std::uint16_t CHR_ROM_SIZE{0x2000}; // 8KB of CHR ROM
-	constexpr std::uint16_t PALETTE_SIZE{0x20};   // 32 bytes of palette RAM
+
+	struct Sprite
+	{
+		std::uint8_t pos_y;
+		std::uint8_t index;
+		std::uint8_t attributes;
+		std::uint8_t byte_x;
+	};
+
+	struct Palette
+	{
+		std::array<std::uint8_t, 4> colors{};
+	};
+
+	struct Nametable
+	{
+		std::array<std::uint8_t, 960> data{};
+		std::array<std::uint8_t, 64>  attribute_table{};
+	};
+
+	constexpr std::uint16_t VRAM_SIZE{sizeof(Nametable) * 4}; // 2KB of VRAM
+	constexpr std::uint16_t OAM_SIZE{0x100};                  // 256 bytes of OAM
+	constexpr std::uint16_t CHR_ROM_SIZE{0x2000};             // 8KB of CHR ROM
+	constexpr std::uint16_t PALETTE_SIZE{0x20};               // 32 bytes of palette RAM
 
 	namespace Registers
 	{

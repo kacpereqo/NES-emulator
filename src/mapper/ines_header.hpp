@@ -19,6 +19,12 @@ namespace INesHeader
 		std::array<std::uint8_t, 5> reserved;
 	};
 
+	enum class Mirroring : std::uint8_t
+	{
+		Vertical   = 0,
+		Horizontal = 1,
+	};
+
 	// --------------------
 	// Flags 6 – mirroring, battery, trainer, mapper low nibble
 	namespace flag6
