@@ -20,17 +20,17 @@ namespace PPU
 	void PPU::init()
 	{}
 
-	void PPU::load_chr_rom(std::vector<std::uint8_t> &&chr_rom)
-	{
-		std::ranges::copy(chr_rom, chr_rom.begin());
-	}
-
 	void PPU::run()
 	{
 
 
 		if (this->register_controller & Controller::NMI && this->scanline == 241 && this->cycle == 1)
 			this->cpu.signal_nmi_interrupt();
+		if (this->cycle >= 1 && this->cycle <= 256) {
+			const std::uint16_t base_nametable_address           = this->get_base_nametable_adress();
+			const std::uint16_t sprite_pattern_table_address     = this->get_sprite_pattern_table_adress();
+			const std::uint16_t background_pattern_Table_address = this->get_background_pattern_table_address();
+		}
 
 		this->cycle++;
 		if (this->cycle > 340) {
@@ -129,7 +129,7 @@ std::uint8_t PPU::PPU::read_oam_data()
 }
 std::uint8_t PPU::PPU::read_vram_data()
 {
-	return vram[current_vram_address % VRAM_SIZE];
+	return vram[this->map_vram_mirroring(current_vram_address)];
 }
 
 void PPU::PPU::write_oam_address(std::uint8_t data)
@@ -189,4 +189,52 @@ std::uint16_t PPU::PPU::map_vram_mirroring(const std::uint16_t vram_address)
 			return vram_address - 0x2000 + sizeof(Nametable);
 	}
 	return 0x0;
+}
+
+std::uint16_t PPU::PPU::get_base_nametable_adress() const
+{
+	std::uint8_t value = this->register_status & Controller::Nametable;
+
+	switch (value) {
+		case 0:
+			return 0x2000;
+		case 1:
+			return 0x2400;
+		case 2:
+			return 0x2800;
+		case 3:
+			return 0x2C00;
+		default:;
+	}
+	return {};
+}
+
+std::uint16_t PPU::PPU::get_sprite_pattern_table_adress() const
+{
+	std::uint8_t value = this->register_status & Controller::Sprite_tile_selected;
+
+	switch (value) {
+		case 0:
+			return 0x0000;
+		case 1:
+			return 0x1000;
+		default:;
+	}
+
+	return {};
+}
+
+std::uint16_t PPU::PPU::get_background_pattern_table_address() const
+{
+	std::uint8_t value = this->register_status & Controller::Background_tile_selected;
+
+	switch (value) {
+		case 0:
+			return 0x0000;
+		case 1:
+			return 0x1000;
+		default:;
+	}
+
+	return {};
 }

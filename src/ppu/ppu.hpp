@@ -64,6 +64,12 @@ namespace PPU
 		CPU::CPU &cpu;
 		Bus::Bus &bus;
 
+		// utils
+		std::uint16_t map_vram_mirroring(std::uint16_t vram_address);
+		std::uint16_t get_base_nametable_adress() const;
+		std::uint16_t get_sprite_pattern_table_adress() const;
+		std::uint16_t get_background_pattern_table_address() const;
+
 		// Memory registers
 		std::uint8_t &register_controller;   // $2000
 		std::uint8_t &register_mask;         // $2001
@@ -83,12 +89,10 @@ namespace PPU
 		std::uint8_t  fine_x_scroll : 3 {0};         // x
 		bool          latch{false};                  // w
 
-		std::uint16_t map_vram_mirroring(std::uint16_t vram_address);
-
 		std::array<std::uint32_t, 256 * 240> frame_buffer{};
 		std::array<std::uint8_t, VRAM_SIZE>  vram{}; // background infromation
 		std::array<std::uint8_t, OAM_SIZE>   oam{};  // state of sprites
 
-		std::array<std::uint8_t, PALETTE_SIZE> palette; // pallets used by a screen
+		std::array<Palette, 4> palette; // pallets used by a screen
 	};
 } // namespace PPU
