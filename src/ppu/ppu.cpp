@@ -26,6 +26,7 @@ namespace PPU
 
 		if (this->register_controller & Controller::NMI && this->scanline == 241 && this->cycle == 1)
 			this->cpu.signal_nmi_interrupt();
+	    
 		if (this->cycle >= 1 && this->cycle <= 256) {
 			const std::uint16_t base_nametable_address           = this->get_base_nametable_adress();
 			const std::uint16_t sprite_pattern_table_address     = this->get_sprite_pattern_table_adress();
